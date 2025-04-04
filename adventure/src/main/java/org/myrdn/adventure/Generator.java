@@ -16,6 +16,10 @@ public class Generator {
     private static final int DOOR_LEFT  = 0b0010;
     private static final int DOOR_UP    = 0b0100;
     private static final int DOOR_RIGHT = 0b1000;
+    private static final int MAX_ATTEMPTS = 1000;
+    private static final int MAX_ROOM_ATTEMPTS = 10;
+    private static final Random RANDOM = new Random();
+
 
     public Generator(int xSize, int ySize) {
         this.xSize = xSize;
@@ -24,18 +28,12 @@ public class Generator {
         buildMap();
     }
 
-    private void buildMap() {
-        int count = 0;
-        do {
-            count++;
-            this.startTile = generateStartTile();
-            generateLayout(this.xSize, this.ySize);
-            generateStart();
-            placeRooms();
-            if(count > 1000) {
-                System.exit(0);
-            }
-        } while(!isFullyConnected());
+    public int[][] getLayout() {
+        return this.layout;
+    }
+
+    public int[] getStartPosition() {
+        return this.startPosition;
     }
 
     private int generateStartTile() {
@@ -44,7 +42,7 @@ public class Generator {
         return tiles.get(0);
     }
 
-    private void generateLayout(int xSize, int ySize) {
+    private void initializeLayout(int xSize, int ySize) {
         for(int i = 0; i < ySize; i++) {
             for(int j = 0; j < xSize; j++) {
                 this.layout[i][j] = 0;
@@ -54,13 +52,45 @@ public class Generator {
 
     private void generateStart() {
         int yPos = this.ySize - 1;
-        Random random = new Random();
         int minX = this.xSize / 4;
         int maxX = minX + this.xSize / 2;
-        int xPos = minX + random.nextInt(maxX - minX);
+        int xPos = minX + RANDOM.nextInt(maxX - minX);
         int[] genPos = {yPos, xPos};
         this.startPosition = genPos;
         this.layout[yPos][xPos] = this.startTile;
+    }
+
+    private void buildMap() {
+        int count = 0;
+        do {
+            count++;
+            this.startTile = generateStartTile();
+            initializeLayout(this.xSize, this.ySize);
+            generateStart();
+            placeRooms();
+            if(count > MAX_ATTEMPTS) {
+                throw new RuntimeException("Es konnte keine vollverbundene Karte nach " + MAX_ATTEMPTS + " Versuchen erstellt werden.");
+            }
+        } while(!isFullyConnected());
+    }
+
+    private void placeRooms() {
+        for(int y = this.ySize-1; y >= 0; y--) {
+            for(int x = 0; x < this.xSize; x++) {
+                if(this.layout[y][x] == 0) {
+                    int value = 0b0000;
+                    int counter = 0;
+                    do {
+                        counter++;
+                        value = checkDown(y,x,checkLeft(y,x,checkUp(y,x,checkRight(y,x,value))));
+                        this.layout[y][x] = value;
+                        if(counter > MAX_ROOM_ATTEMPTS) {
+                            break;
+                        }
+                    } while(value == 0);
+                }
+            }
+        }
     }
 
     private int checkDown(int y, int x, int value) {
@@ -89,33 +119,6 @@ public class Generator {
             value |= (this.layout[y][x + 1] == 0 && Math.round(Math.random() * 10) >= 7) ? 0 : DOOR_RIGHT;
         }
         return value;
-    }
-
-    private void placeRooms() {
-        for(int y = this.ySize-1; y >= 0; y--) {
-            for(int x = 0; x < this.xSize; x++) {
-                if(this.layout[y][x] == 0) {
-                    int value = 0b0000;
-                    int counter = 0;
-                    do {
-                        counter++;
-                        value = checkDown(y,x,checkLeft(y,x,checkUp(y,x,checkRight(y,x,value))));
-                        this.layout[y][x] = value;
-                        if(counter > 10) {
-                            break;
-                        }
-                    } while(value == 0);
-                }
-            }
-        }
-    }
-
-    public int[][] getLayout() {
-        return this.layout;
-    }
-
-    public int[] getStartPosition() {
-        return this.startPosition;
     }
 
     public boolean isFullyConnected() {
