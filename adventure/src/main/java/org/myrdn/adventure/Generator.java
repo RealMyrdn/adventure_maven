@@ -95,28 +95,28 @@ public class Generator {
 
     private int checkDown(int y, int x, int value) {
         if(y < this.ySize - 1 && (this.layout[y + 1][x] == 0 || (0b0100 & this.layout[y + 1][x]) != 0 )) {
-            value |= (this.layout[y + 1][x] == 0 && Math.round(Math.random() * 10) >= 7) ? 0 : DOOR_DOWN;
+            value |= (this.layout[y + 1][x] == 0 && RANDOM.nextInt(10) >= 7) ? 0 : DOOR_DOWN;
         }
         return value;
     }
 
     private int checkLeft(int y, int x, int value) {
         if(x > 0 && (this.layout[y][x - 1] == 0 || (0b1000 & this.layout[y][x - 1]) != 0)) {
-            value |= (this.layout[y][x - 1] == 0 && Math.round(Math.random() * 10) >= 7) ? 0 : DOOR_LEFT;
+            value |= (this.layout[y][x - 1] == 0 && RANDOM.nextInt(10) >= 7) ? 0 : DOOR_LEFT;
         }
         return value;
     }
 
     private int checkUp(int y, int x, int value) {
         if(y > 0 && (this.layout[y - 1][x] == 0  || (0b0001 & this.layout[y - 1][x]) != 0 )) {
-            value |= (this.layout[y - 1][x] == 0 && Math.round(Math.random() * 10) >= 7) ? 0 : DOOR_UP;
+            value |= (this.layout[y - 1][x] == 0 && RANDOM.nextInt(10) >= 7) ? 0 : DOOR_UP;
         }
         return value;
     }
 
     private int checkRight(int y, int x, int value) {
         if(x < this.xSize - 1 && (this.layout[y][x + 1] == 0 || (0b0010 & this.layout[y][x + 1]) != 0)) {
-            value |= (this.layout[y][x + 1] == 0 && Math.round(Math.random() * 10) >= 7) ? 0 : DOOR_RIGHT;
+            value |= (this.layout[y][x + 1] == 0 && RANDOM.nextInt(10) >= 7) ? 0 : DOOR_RIGHT;
         }
         return value;
     }
