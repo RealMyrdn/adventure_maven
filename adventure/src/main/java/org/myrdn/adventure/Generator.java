@@ -124,9 +124,9 @@ public class Generator {
         visited[y][x] = true;
         int count = 1;
         
-        if((layout[y][x] & DOOR_DOWN) != 0) count += depthFirstSearch(y + 1, x, visited);
-        if((layout[y][x] & DOOR_LEFT) != 0) count += depthFirstSearch(y, x - 1, visited);
-        if((layout[y][x] & DOOR_UP) != 0) count += depthFirstSearch(y - 1, x, visited);
+        if((layout[y][x] & DOOR_DOWN)  != 0) count += depthFirstSearch(y + 1, x, visited);
+        if((layout[y][x] & DOOR_LEFT)  != 0) count += depthFirstSearch(y, x - 1, visited);
+        if((layout[y][x] & DOOR_UP)    != 0) count += depthFirstSearch(y - 1, x, visited);
         if((layout[y][x] & DOOR_RIGHT) != 0) count += depthFirstSearch(y, x + 1, visited);
         
         return count;
