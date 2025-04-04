@@ -31,4 +31,8 @@ public class Game {
             System.out.println(e);
         }
     }
+
+    public Player getPlayer() {
+        return player;
+    }
 }
