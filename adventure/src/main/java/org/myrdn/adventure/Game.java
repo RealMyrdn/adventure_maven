@@ -21,7 +21,6 @@ public class Game {
 
     public void init() {
         try {
-            System.out.println("Initialisiere Screen");
             this.renderer.initScreen();
             this.renderer.addNewPanel();
             this.renderer.addComponentToPanel(this.house.getMap(), " Map ", 0);
@@ -33,6 +32,10 @@ public class Game {
     }
 
     public Player getPlayer() {
-        return player;
+        return this.player;
+    }
+
+    public House getHouse() {
+        return this.house;
     }
 }
