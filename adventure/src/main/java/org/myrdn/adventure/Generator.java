@@ -12,14 +12,15 @@ public class Generator {
     private final int[][] layout;
     private int startTile;
     private int[] startPosition;
-    private static final int DOOR_DOWN  = 0b0001;
-    private static final int DOOR_LEFT  = 0b0010;
-    private static final int DOOR_UP    = 0b0100;
-    private static final int DOOR_RIGHT = 0b1000;
-    private static final int MAX_ATTEMPTS = 1000;
-    private static final int MAX_ROOM_ATTEMPTS = 10;
-    private static final Random RANDOM = new Random();
 
+    private static final int DOOR_DOWN          = 0b0001;
+    private static final int DOOR_LEFT          = 0b0010;
+    private static final int DOOR_UP            = 0b0100;
+    private static final int DOOR_RIGHT         = 0b1000;
+    private static final int MAX_ATTEMPTS       = 200000;
+    private static final int MAX_ROOM_ATTEMPTS  = 10;
+    private static final int DOOR_THRESHOLD     = 1;
+    private static final Random RANDOM          = new Random();
 
     public Generator(int xSize, int ySize) {
         this.xSize = xSize;
@@ -82,7 +83,7 @@ public class Generator {
                     int counter = 0;
                     do {
                         counter++;
-                        value = checkDown(y,x,checkLeft(y,x,checkUp(y,x,checkRight(y,x,value))));
+                        value = checkDoors(y, x, value);
                         this.layout[y][x] = value;
                         if(counter > MAX_ROOM_ATTEMPTS) {
                             break;
@@ -93,31 +94,18 @@ public class Generator {
         }
     }
 
-    private int checkDown(int y, int x, int value) {
-        if(y < this.ySize - 1 && (this.layout[y + 1][x] == 0 || (0b0100 & this.layout[y + 1][x]) != 0 )) {
-            value |= (this.layout[y + 1][x] == 0 && RANDOM.nextInt(10) >= 7) ? 0 : DOOR_DOWN;
+    private int checkDirection(int value, int door, int nextY, int nextX, int oppositeDoor) {
+        if(nextY >= 0 && nextY < this.ySize && nextX >= 0 && nextX < this.xSize && (this.layout[nextY][nextX] == 0 || (oppositeDoor & this.layout[nextY][nextX]) != 0)) {
+            value |= (this.layout[nextY][nextX] == 0 && RANDOM.nextInt(2) >= DOOR_THRESHOLD) ? 0 : door;
         }
         return value;
     }
 
-    private int checkLeft(int y, int x, int value) {
-        if(x > 0 && (this.layout[y][x - 1] == 0 || (0b1000 & this.layout[y][x - 1]) != 0)) {
-            value |= (this.layout[y][x - 1] == 0 && RANDOM.nextInt(10) >= 7) ? 0 : DOOR_LEFT;
-        }
-        return value;
-    }
-
-    private int checkUp(int y, int x, int value) {
-        if(y > 0 && (this.layout[y - 1][x] == 0  || (0b0001 & this.layout[y - 1][x]) != 0 )) {
-            value |= (this.layout[y - 1][x] == 0 && RANDOM.nextInt(10) >= 7) ? 0 : DOOR_UP;
-        }
-        return value;
-    }
-
-    private int checkRight(int y, int x, int value) {
-        if(x < this.xSize - 1 && (this.layout[y][x + 1] == 0 || (0b0010 & this.layout[y][x + 1]) != 0)) {
-            value |= (this.layout[y][x + 1] == 0 && RANDOM.nextInt(10) >= 7) ? 0 : DOOR_RIGHT;
-        }
+    private int checkDoors(int y, int x, int value) {
+        value = checkDirection(value, DOOR_DOWN,  y + 1, x, 0b0100);
+        value = checkDirection(value, DOOR_LEFT,  y, x - 1, 0b1000);
+        value = checkDirection(value, DOOR_UP,    y - 1, x, 0b0001);
+        value = checkDirection(value, DOOR_RIGHT, y, x + 1, 0b0010);
         return value;
     }
 
