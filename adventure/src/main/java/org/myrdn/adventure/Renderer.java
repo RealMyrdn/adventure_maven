@@ -37,6 +37,14 @@ public class Renderer {
         this.mapFound = false;
     }
 
+    public Terminal getTerminal() {
+        return this.terminal;
+    }
+
+    public Screen getScreen() {
+        return this.screen;
+    }
+
     public void setMapFound(boolean mapFound) {
         this.mapFound = mapFound;
     }

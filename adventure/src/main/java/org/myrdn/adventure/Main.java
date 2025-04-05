@@ -9,7 +9,6 @@ public class Main {
         try {
             Game game = new Game(xSize, ySize, "Myrdn");
             game.init();
-            game.loop();
         } catch(IOException e) {
             System.out.println(e);
         }

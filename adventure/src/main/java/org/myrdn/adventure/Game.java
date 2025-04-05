@@ -40,13 +40,15 @@ public class Game {
             System.out.println("Screen konnte nicht gestartet werden!");
             System.out.println(e);
         }
+        loop();
     }
 
     public void loop() {
         try {
             this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
             this.renderer.printRoomDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
-            System.out.println("Rauminfo: " + this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
+            this.renderer.getTerminal().readInput();
+            this.renderer.getScreen().stopScreen();
         } catch (IOException e) {
             System.out.println(e);
         }
