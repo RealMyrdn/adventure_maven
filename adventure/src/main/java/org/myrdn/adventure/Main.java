@@ -10,6 +10,7 @@ public class Main {
             Game game = new Game(xSize, ySize, "Myrdn");
             game.init();
         } catch(IOException e) {
+            System.out.println("Spiel konnte nicht initialisiert werden");
             System.out.println(e);
         }
     }
