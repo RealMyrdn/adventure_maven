@@ -16,7 +16,6 @@ public class GameObject implements Serializable {
         this.hiddenStashes = hiddenStashes;
         this.placements = placements;
         this.description = description;
-        this.placements = 0;
     }
 
     public int getId() {

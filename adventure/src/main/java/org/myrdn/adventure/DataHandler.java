@@ -13,7 +13,7 @@ public class DataHandler {
 
     public ArrayList<GameObject> loadObjects() {
         ArrayList<GameObject> gameObjects = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("objects.csv"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("/cvs/objects.csv"))) {
             String line;
             while((line = reader.readLine()) != null) {
                 String[] item = line.split("; ");

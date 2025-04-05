@@ -45,6 +45,10 @@ public class Game {
     public void loop() {
         try {
             this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
+            this.renderer.printRoomDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
+            System.out.println("Rauminfo: " + this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
+            // this.renderer.setMapFound(true);
+            // this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
         } catch (IOException e) {
             System.out.println(e);
         }

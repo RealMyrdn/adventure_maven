@@ -33,15 +33,27 @@ public class Room implements Serializable {
         StringBuilder stringbuilder = new StringBuilder();
         int doors = Integer.bitCount(roomType);
         if(doors > 1) {
-            stringbuilder.append("Dieser Raum enthält ").append(doors).append(" Ausgänge.");
+            stringbuilder.append("Dieser Raum hat ").append(doors).append(" Ausgänge.\n");
         } else {
-            stringbuilder.append("Dieser Raum hat einen Ausgang.");
+            stringbuilder.append("Dieser Raum hat einen Ausgang.\n");
+        }
+        if(this.objects != null && !this.objects.isEmpty()) {
+            if(this.objects.size() <= 1) {
+                stringbuilder.append("Als du dich umschaust, siehst du ein Objekt, das hier herumsteht.\n");
+            } else {
+                stringbuilder.append("Als du dich umschaust, siehst du ").append(this.objects.size()).append(" Objekte, die hier verstreut herumstehen.\n");
+            }
+            for(GameObject object : this.objects) {
+                stringbuilder.append(object.getName()).append("\n");
+            }
+        } else {
+            stringbuilder.append("Hier scheint es nichts von Interesse zu geben.\n");
         }
         return stringbuilder.toString();
     }
 
     private ArrayList<GameObject> addObjects(ArrayList<GameObject> availabeObjects) {
-        if(!availabeObjects.isEmpty()) {
+        if(availabeObjects != null && !availabeObjects.isEmpty()) {
             int chance = RANDOM.nextInt(10);
             int countObjects = RANDOM.nextInt(2);
             ArrayList<GameObject> newObjects = new ArrayList<>();
@@ -52,7 +64,6 @@ public class Room implements Serializable {
                     }
                     Collections.shuffle(availabeObjects);
                     newObjects.add(availabeObjects.get(0));
-                    System.out.println(availabeObjects.get(0).getName());
                     availabeObjects.remove(0);
                 }
             }

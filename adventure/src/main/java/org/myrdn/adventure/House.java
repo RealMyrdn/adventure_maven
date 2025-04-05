@@ -35,7 +35,6 @@ public final class House implements Serializable {
         for(int y = this.layout.length - 1; y >= 0; y--) {
             for(int x = 0; x < this.layout[y].length - 1; x++) {
                 genRooms[y][x] = new Room(this.layout[y][x], this.availabeObjects);
-                System.out.println(x + ", " + y);
             }
         }
         return genRooms;
