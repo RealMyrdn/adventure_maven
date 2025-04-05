@@ -1,3 +1,7 @@
 /.settings
 /.vscode
 .project
+/adventure/.settings
+/adventure/.vscode
+/adventure/.project
+/adventure/target
