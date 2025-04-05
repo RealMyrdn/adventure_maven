@@ -7,21 +7,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class DataHandler {
-    public static void savePlayer(Player player) throws IOException {
-        String fileName= player.getName() + ".bin";
+    public void saveGame(SaveGame savegame) throws IOException {
+        String fileName= savegame.getPlayerName() + ".bin";
         FileOutputStream fos = new FileOutputStream(fileName);
         try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(player);
+            oos.writeObject(savegame);
         }
     }
 
-    public static Player loadPlayer(String playerName) throws IOException, ClassNotFoundException {
+    public SaveGame loadGame(String playerName) throws IOException, ClassNotFoundException {
     String fileName= playerName + ".bin";
     FileInputStream fin = new FileInputStream(fileName);
-    Player player;
+    SaveGame savegame;
         try (ObjectInputStream ois = new ObjectInputStream(fin)) {
-            player = (Player) ois.readObject();
+            savegame = (SaveGame) ois.readObject();
         }
-    return player;
+    return savegame;
     }
 }

@@ -6,11 +6,14 @@ public class Game {
 
     private final House house;
     private final Player player;
+    private final SaveGame savegame;
+    private DataHandler datahandler = new DataHandler();
     private Renderer renderer;
 
     public Game(int xSize, int ySize, String name) {
         this.house = new House(xSize, ySize);
         this.player = new Player(name ,house.getStartPosition());
+        this.savegame = new SaveGame(this.player, this.house);
         try {
             this.renderer = new Renderer();
         } catch(IOException e) {
@@ -27,6 +30,11 @@ public class Game {
             this.renderer.startGUI();
         } catch (IOException e) {
             System.out.println("Screen konnte nicht gestartet werden!");
+            System.out.println(e);
+        }
+        try {
+            datahandler.saveGame(savegame);
+        } catch (IOException e) {
             System.out.println(e);
         }
     }
