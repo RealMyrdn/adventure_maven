@@ -1,17 +1,22 @@
 package org.myrdn.adventure;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public final class House implements Serializable {
 
     private final int[][] layout;
     private final int[] startPosition;
     private final Room[][] rooms;
+    private final DataHandler dataHandler;
+    private final ArrayList<GameObject> availabeObjects;
 
     public House(int[] startPosition, int[][] layout) {
         this.layout = layout;
         this.startPosition = startPosition;
         this.rooms = placeRooms(this.layout);
+        this.dataHandler = new DataHandler();
+        this.availabeObjects = new ArrayList<>();
     }
 
     public int[] getStartPosition() {
@@ -29,6 +34,11 @@ public final class House implements Serializable {
 
     public Room[][] placeRooms(int mapLayout[][]) {
         Room[][] genRooms = new Room[mapLayout.length][mapLayout[0].length];
+        for(int y = this.layout.length - 1; y >= 0; y--) {
+            for(int x = 0; x < this.layout[y].length - 1; x++) {
+                genRooms[y][x] = new Room(this.layout[y][x], this.availabeObjects);
+            }
+        }
         return genRooms;
     }
 

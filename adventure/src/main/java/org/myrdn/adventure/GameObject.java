@@ -1,5 +1,7 @@
 package org.myrdn.adventure;
 
-public class GameObject {
+import java.io.Serializable;
+
+public class GameObject implements Serializable {
 
 }
