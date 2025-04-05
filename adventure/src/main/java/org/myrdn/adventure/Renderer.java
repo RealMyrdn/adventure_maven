@@ -30,12 +30,11 @@ public class Renderer {
 
     public Renderer(int xSize, int ySize) throws IOException {
         this.size = new TerminalSize(120, 40);
-        // this.myFont = new Font("JetBrains Mono", Font.PLAIN, 14);
-        this.myFont = loadFontFromResources("/fonts/JetBrainsMono-Regular.ttf", 16f);
+        this.myFont = loadFontFromResources("/fonts/JetBrainsMono-Regular.ttf", 14f);
         this.myFontConfiguration = SwingTerminalFontConfiguration.newInstance(myFont);
         this.xSize = xSize;
         this.ySize = ySize;
-        this.mapFound = true;
+        this.mapFound = false;
     }
 
     public void setMapFound(boolean mapFound) {

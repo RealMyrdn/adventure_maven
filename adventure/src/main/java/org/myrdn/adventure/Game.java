@@ -11,7 +11,7 @@ public class Game {
     private DataHandler datahandler = new DataHandler();
     private Renderer renderer;
 
-    public Game(int xSize, int ySize, String name) {
+    public Game(int xSize, int ySize, String name) throws IOException  {
         this.generator = new Generator(xSize, ySize);
         this.house = new House(this.generator.getStartPosition(), this.generator.getLayout(), datahandler.loadObjects());
         this.player = new Player(name ,house.getStartPosition());
@@ -47,8 +47,6 @@ public class Game {
             this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
             this.renderer.printRoomDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
             System.out.println("Rauminfo: " + this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
-            // this.renderer.setMapFound(true);
-            // this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
         } catch (IOException e) {
             System.out.println(e);
         }

@@ -3,25 +3,28 @@ package org.myrdn.adventure;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class DataHandler {
 
-    public ArrayList<GameObject> loadObjects() {
+    public ArrayList<GameObject> loadObjects() throws NumberFormatException, IOException {
         ArrayList<GameObject> gameObjects = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("/cvs/objects.csv"))) {
-            String line;
-            while((line = reader.readLine()) != null) {
-                String[] item = line.split("; ");
-                gameObjects.add(new GameObject(Integer.parseInt(item[0]), item[1], Integer.parseInt(item[2]), Integer.parseInt(item[3]), item[4]));
+        InputStream inputStream = DataHandler.class.getResourceAsStream("/csv/objects.csv");
+        if (inputStream == null) {
+            throw new IOException("CSV-Datei nicht gefunden");
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        while((line = reader.readLine()) != null) {
+            String[] item = line.split("; ");
+            for(int i = 0; i < Integer.parseInt(item[3]); i++) {
+                gameObjects.add(new GameObject(item[1], Integer.parseInt(item[2]), item[4]));
             }
-        } catch(IOException e) {
-            System.out.println(e);
-            return null;
         }
         return gameObjects;
     }

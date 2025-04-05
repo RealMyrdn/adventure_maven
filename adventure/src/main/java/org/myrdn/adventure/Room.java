@@ -32,11 +32,12 @@ public class Room implements Serializable {
     private String generateRoomInfo() {
         StringBuilder stringbuilder = new StringBuilder();
         int doors = Integer.bitCount(roomType);
-        if(doors > 1) {
-            stringbuilder.append("Dieser Raum hat ").append(doors).append(" Ausgänge.\n");
-        } else {
-            stringbuilder.append("Dieser Raum hat einen Ausgang.\n");
-        }
+        checkExits(doors, stringbuilder);
+        checkObjects(stringbuilder);
+        return stringbuilder.toString();
+    }
+
+    private void checkObjects(StringBuilder stringbuilder) {
         if(this.objects != null && !this.objects.isEmpty()) {
             if(this.objects.size() <= 1) {
                 stringbuilder.append("Als du dich umschaust, siehst du ein Objekt, das hier herumsteht.\n");
@@ -49,7 +50,14 @@ public class Room implements Serializable {
         } else {
             stringbuilder.append("Hier scheint es nichts von Interesse zu geben.\n");
         }
-        return stringbuilder.toString();
+    }
+
+    private void checkExits(int doors, StringBuilder stringbuilder) {
+        if(doors > 1) {
+            stringbuilder.append("Dieser Raum hat ").append(doors).append(" Ausgänge.\n");
+        } else {
+            stringbuilder.append("Dieser Raum hat einen Ausgang.\n");
+        }
     }
 
     private ArrayList<GameObject> addObjects(ArrayList<GameObject> availabeObjects) {

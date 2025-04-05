@@ -4,17 +4,17 @@ import java.io.Serializable;
 
 public class GameObject implements Serializable {
 
+    private static int counter = 0;
     private final int id;
     private final String name;
     private final int hiddenStashes;
     private int placements;
     private final String description;
 
-    public GameObject(int id, String name, int hiddenStashes, int placements, String description) {
-        this.id = id;
+    public GameObject(String name, int hiddenStashes, String description) {
+        this.id = counter++;
         this.name = name;
         this.hiddenStashes = hiddenStashes;
-        this.placements = placements;
         this.description = description;
     }
 
