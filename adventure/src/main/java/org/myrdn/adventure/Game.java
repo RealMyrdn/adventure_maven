@@ -6,12 +6,14 @@ public class Game {
 
     private final House house;
     private final Player player;
+    private final Generator generator;
     private final SaveGame savegame;
     private DataHandler datahandler = new DataHandler();
     private Renderer renderer;
 
     public Game(int xSize, int ySize, String name) {
-        this.house = new House(xSize, ySize);
+        this.generator = new Generator(xSize, ySize);
+        this.house = new House(this.generator.getStartPosition(), this.generator.getLayout());
         this.player = new Player(name ,house.getStartPosition());
         this.savegame = new SaveGame(this.player, this.house);
         try {

@@ -4,18 +4,12 @@ import java.io.Serializable;
 
 public class House implements Serializable {
 
-    private final int xSize;
-    private final int ySize;
-    private final Generator generator;
     private final int[][] layout;
     private final int[] startPosition;
 
-    public House(int xSize, int ySize) {
-        this.xSize = xSize;
-        this.ySize = ySize;
-        this.generator = new Generator(this.xSize, this.ySize);
-        this.layout = generator.getLayout();
-        this.startPosition = generator.getStartPosition();
+    public House(int[] startPosition, int[][] layout) {
+        this.layout = layout;
+        this.startPosition = startPosition;
     }
 
     public int[] getStartPosition() {
