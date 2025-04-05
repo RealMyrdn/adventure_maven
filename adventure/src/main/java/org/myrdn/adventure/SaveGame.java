@@ -11,4 +11,8 @@ public class SaveGame {
     public String getPlayerName() {
         return this.player.getName();
     }
+
+    public House getHouse() {
+        return this.house;
+    }
 }
