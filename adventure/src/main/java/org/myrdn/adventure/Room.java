@@ -35,13 +35,20 @@ public class Room implements Serializable {
     }
 
     private ArrayList<GameObject> addObjects(ArrayList<GameObject> availabeObjects) {
-        if(availabeObjects != null && !availabeObjects.isEmpty()) {
+        if(!availabeObjects.isEmpty()) {
+            int chance = RANDOM.nextInt(10);
             int countObjects = RANDOM.nextInt(3);
             ArrayList<GameObject> newObjects = new ArrayList<>();
-            for(int i = 0; i < countObjects; i++) {
-                Collections.shuffle(availabeObjects);
-                newObjects.add(availabeObjects.get(0));
-                availabeObjects.remove(0);
+            if(chance >= 8) {
+                for(int i = 0; i <= countObjects; i++) {
+                    if(availabeObjects.isEmpty()) {
+                        break;
+                    }
+                    Collections.shuffle(availabeObjects);
+                    newObjects.add(availabeObjects.get(0));
+                    System.out.println(availabeObjects.get(0).getName());
+                    availabeObjects.remove(0);
+                }
             }
             return newObjects;
         } else {

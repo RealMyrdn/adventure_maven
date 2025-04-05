@@ -1,7 +1,9 @@
 package org.myrdn.adventure;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,8 +11,17 @@ import java.util.ArrayList;
 
 public class DataHandler {
 
-    public ArrayList<GameObject> loadObjects() throws IOException {
+    public ArrayList<GameObject> loadObjects() {
         ArrayList<GameObject> gameObjects = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("objects.csv"))) {
+            String line;
+            while((line = reader.readLine()) != null) {
+                gameObjects.add(new GameObject(line));
+            }
+        } catch(IOException e) {
+            System.out.println(e);
+            return null;
+        }
         return gameObjects;
     }
 
