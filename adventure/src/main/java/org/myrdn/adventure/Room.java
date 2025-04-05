@@ -1,16 +1,15 @@
 package org.myrdn.adventure;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Room {
+public class Room implements Serializable {
     private final int roomType;
-    private final int[] roomCoords;
-    private final ArrayList<Integer> objects;
+    private final ArrayList<GameObject> objects;
     private final String roomInfo;
     
-    public Room(int roomType, int[] roomCoords, ArrayList<Integer> objects, String roomInfo) {
+    public Room(int roomType, ArrayList<GameObject> objects, String roomInfo) {
         this.roomType = roomType;
-        this.roomCoords = roomCoords;
         this.objects = objects;
         this.roomInfo = roomInfo;
     }
@@ -19,11 +18,7 @@ public class Room {
         return this.roomType;
     }
 
-    public int[] getRoomCoords() {
-        return this.roomCoords;
-    }
-
-    public ArrayList<Integer> getObjects() {
+    public ArrayList<GameObject> getObjects() {
         return this.objects;
     }
 

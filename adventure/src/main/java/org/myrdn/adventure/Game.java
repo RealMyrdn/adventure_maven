@@ -28,7 +28,7 @@ public class Game {
         try {
             this.renderer.initScreen();
             this.renderer.addNewPanel();
-            this.renderer.addComponentToPanel(this.house.getMap(), " Map ", 0);
+            this.renderer.addComponentToPanel(this.house.drawMap(), " Map ", 0);
             this.renderer.startGUI();
         } catch (IOException e) {
             System.out.println("Screen konnte nicht gestartet werden!");
