@@ -1,6 +1,8 @@
 package org.myrdn.adventure;
 
-public class SaveGame {
+import java.io.Serializable;
+
+public class SaveGame implements Serializable {
     private final Player player;
     private final House house;
     public SaveGame(Player player, House house) {

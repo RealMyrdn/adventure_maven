@@ -1,8 +1,9 @@
 package org.myrdn.adventure;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Serializable {
     private final String name;
     private int[] position;
     private int maxHealth;

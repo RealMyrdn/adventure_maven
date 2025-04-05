@@ -1,11 +1,12 @@
 package org.myrdn.adventure;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
-public class Generator {
+public class Generator implements Serializable {
 
     private final int xSize;
     private final int ySize;

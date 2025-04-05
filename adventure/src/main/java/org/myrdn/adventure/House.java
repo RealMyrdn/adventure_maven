@@ -1,6 +1,8 @@
 package org.myrdn.adventure;
 
-public class House {
+import java.io.Serializable;
+
+public class House implements Serializable {
 
     private final int xSize;
     private final int ySize;
