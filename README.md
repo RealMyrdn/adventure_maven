@@ -5,6 +5,6 @@
       Game-->House;
       Game-->Player;
       Game-->Renderer;
-      House-->Generator;
+      Game-->Generator;
       House-->Room
 ```
