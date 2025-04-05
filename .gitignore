@@ -4,4 +4,4 @@
 /adventure/.settings
 /adventure/.vscode
 /adventure/.project
-/adventure/target/classes
+/adventure/target/classes/classes/*
