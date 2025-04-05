@@ -16,7 +16,8 @@ public class DataHandler {
         try (BufferedReader reader = new BufferedReader(new FileReader("objects.csv"))) {
             String line;
             while((line = reader.readLine()) != null) {
-                gameObjects.add(new GameObject(line));
+                String[] item = line.split("; ");
+                gameObjects.add(new GameObject(Integer.parseInt(item[0]), item[1], Integer.parseInt(item[2]), Integer.parseInt(item[3]), item[4]));
             }
         } catch(IOException e) {
             System.out.println(e);

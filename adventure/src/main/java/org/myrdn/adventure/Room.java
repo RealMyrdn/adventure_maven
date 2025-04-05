@@ -30,16 +30,22 @@ public class Room implements Serializable {
     }
 
     private String generateRoomInfo() {
-        String info = "";
-        return info;
+        StringBuilder stringbuilder = new StringBuilder();
+        int doors = Integer.bitCount(roomType);
+        if(doors > 1) {
+            stringbuilder.append("Dieser Raum enthält ").append(doors).append(" Ausgänge.");
+        } else {
+            stringbuilder.append("Dieser Raum hat einen Ausgang.");
+        }
+        return stringbuilder.toString();
     }
 
     private ArrayList<GameObject> addObjects(ArrayList<GameObject> availabeObjects) {
         if(!availabeObjects.isEmpty()) {
             int chance = RANDOM.nextInt(10);
-            int countObjects = RANDOM.nextInt(3);
+            int countObjects = RANDOM.nextInt(2);
             ArrayList<GameObject> newObjects = new ArrayList<>();
-            if(chance >= 8) {
+            if(chance >= 4) {
                 for(int i = 0; i <= countObjects; i++) {
                     if(availabeObjects.isEmpty()) {
                         break;

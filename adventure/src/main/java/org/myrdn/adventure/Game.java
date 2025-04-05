@@ -17,26 +17,9 @@ public class Game {
         this.player = new Player(name ,house.getStartPosition());
         this.savegame = new SaveGame(this.player, this.house);
         try {
-            this.renderer = new Renderer();
+            this.renderer = new Renderer(xSize, ySize);
         } catch(IOException e) {
             System.out.println("Renderer konnte nicht initialisiert werden!");
-            System.out.println(e);
-        }
-    }
-
-    public void init() {
-        try {
-            this.renderer.initScreen();
-            this.renderer.addNewPanel();
-            this.renderer.addComponentToPanel(this.house.drawMap(), " Map ", 0);
-            this.renderer.startGUI();
-        } catch (IOException e) {
-            System.out.println("Screen konnte nicht gestartet werden!");
-            System.out.println(e);
-        }
-        try {
-            datahandler.saveGame(savegame);
-        } catch (IOException e) {
             System.out.println(e);
         }
     }
@@ -47,5 +30,28 @@ public class Game {
 
     public House getHouse() {
         return this.house;
+    }
+
+    public void init() {
+        try {
+            this.renderer.initScreen();
+            this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
+        } catch (IOException e) {
+            System.out.println("Screen konnte nicht gestartet werden!");
+            System.out.println(e);
+        }
+    }
+
+    public void loop() {
+        try {
+            this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        try {
+            datahandler.saveGame(savegame);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 }

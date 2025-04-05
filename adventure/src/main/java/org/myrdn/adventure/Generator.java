@@ -17,7 +17,7 @@ public class Generator {
     private static final int DOOR_LEFT          = 0b0010;
     private static final int DOOR_UP            = 0b0100;
     private static final int DOOR_RIGHT         = 0b1000;
-    private static final int MAX_ATTEMPTS       = 500000;
+    private static final int MAX_ATTEMPTS       = 2000000;
     private static final int MAX_ROOM_ATTEMPTS  = 10;
     private static final int DOOR_THRESHOLD     = 1;
     private static final Random RANDOM          = new Random();
