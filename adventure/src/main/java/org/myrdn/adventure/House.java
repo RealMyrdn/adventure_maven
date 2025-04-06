@@ -8,12 +8,12 @@ public final class House implements Serializable {
     private final int[][] layout;
     private final int[] startPosition;
     private final Room[][] rooms;
-    private final ArrayList<GameObject> availabeObjects;
+    private final ArrayList<GameObject> availableObjects;
 
-    public House(int[] startPosition, int[][] layout, ArrayList<GameObject> availabeObjects) {
+    public House(int[] startPosition, int[][] layout, ArrayList<GameObject> availableObjects) {
         this.layout = layout;
         this.startPosition = startPosition;
-        this.availabeObjects = availabeObjects;
+        this.availableObjects = availableObjects;
         this.rooms = placeRooms(this.layout);
     }
 
@@ -34,9 +34,10 @@ public final class House implements Serializable {
         Room[][] genRooms = new Room[mapLayout.length][mapLayout[0].length];
         for(int y = this.layout.length - 1; y >= 0; y--) {
             for(int x = 0; x < this.layout[y].length - 1; x++) {
-                genRooms[y][x] = new Room(this.layout[y][x], this.availabeObjects);
+                genRooms[y][x] = new Room(this.layout[y][x], this.availableObjects);
             }
         }
+        System.out.println("Verbleibende Objekte: " + this.availableObjects.size());
         return genRooms;
     }
 

@@ -13,7 +13,7 @@ public class Game {
 
     public Game(int xSize, int ySize, String name) throws IOException  {
         this.generator = new Generator(xSize, ySize);
-        this.house = new House(this.generator.getStartPosition(), this.generator.getLayout(), datahandler.loadObjects());
+        this.house = new House(this.generator.getStartPosition(), this.generator.getLayout(), datahandler.generateItemObjects());
         this.player = new Player(name ,house.getStartPosition());
         this.savegame = new SaveGame(this.player, this.house);
         try {

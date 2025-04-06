@@ -11,9 +11,9 @@ public class Room implements Serializable {
     private final String roomInfo;
     private static final Random RANDOM = new Random();
     
-    public Room(int roomType, ArrayList<GameObject> availabeObjects) {
+    public Room(int roomType, ArrayList<GameObject> availableObjects) {
         this.roomType = roomType;
-        this.objects = addObjects(availabeObjects);
+        this.objects = addObjects(availableObjects);
         this.roomInfo = generateRoomInfo();
     }
 
@@ -45,7 +45,13 @@ public class Room implements Serializable {
                 stringbuilder.append("Als du dich umschaust, siehst du ").append(this.objects.size()).append(" Objekte, die hier verstreut herumstehen.\n");
             }
             for(GameObject object : this.objects) {
-                stringbuilder.append(object.getName()).append("\n");
+                if(!object.getHiddenItems().isEmpty()) {
+                    for(ItemObject item : object.getHiddenItems()) {
+                        stringbuilder.append(object.getName()).append(" ").append(item.getName()).append("\n");
+                    }
+                } else {
+                    stringbuilder.append(object.getName()).append("\n");
+                }
             }
         } else {
             stringbuilder.append("Hier scheint es nichts von Interesse zu geben.\n");
