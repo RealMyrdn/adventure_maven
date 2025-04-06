@@ -4,11 +4,13 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -120,6 +122,22 @@ public class Renderer {
         String[] rows = description.split("\n");
         for(int y = 0; y < rows.length; y++) {
             this.textGraphics.putString(40, 30 + y, rows[y]);
+        }
+        screen.refresh();
+    }
+
+    public void printInputLine(ArrayList<KeyStroke> keyStrokes) throws IOException {
+        this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
+        this.textGraphics.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
+        if(keyStrokes.isEmpty()) {
+            for (int i = 0; i < 40; i++) {
+                this.textGraphics.putString(10 + i, 35, " ");
+            }
+        }
+        int j = 0;
+        for(KeyStroke keyStroke : keyStrokes) {
+            this.textGraphics.putString(10 + j, 35, keyStroke.getCharacter().toString());
+            j++;
         }
         screen.refresh();
     }

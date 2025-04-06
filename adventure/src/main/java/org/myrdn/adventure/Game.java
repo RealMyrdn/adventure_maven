@@ -1,6 +1,10 @@
 package org.myrdn.adventure;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 
 public class Game {
 
@@ -27,7 +31,6 @@ public class Game {
     public void init() {
         try {
             this.renderer.initScreen();
-            this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
         } catch (IOException e) {
             System.out.println("Screen konnte nicht gestartet werden!");
             System.out.println(e);
@@ -36,10 +39,31 @@ public class Game {
     }
 
     public void loop() {
+        boolean isRunning = true;
         try {
-            this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
-            this.renderer.printRoomDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
-            this.renderer.getTerminal().readInput();
+            KeyStroke keyStroke;
+            KeyType keyType;
+            ArrayList<KeyStroke> keyStrokes = new ArrayList<>();
+            while(isRunning) {
+                this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
+                this.renderer.printRoomDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
+                while(true) {
+                    keyStroke = this.renderer.getTerminal().readInput();
+                    keyType = keyStroke.getKeyType();
+                    System.out.println("KeyType: " + keyType);
+                    System.out.println("Char: " + keyStroke.getCharacter());
+                    if(keyType == KeyType.Enter || keyType == KeyType.Escape) {
+                        break;
+                    }
+                    if(keyStrokes.size() < 40) {
+                        keyStrokes.add(keyStroke);
+                        this.renderer.printInputLine(keyStrokes);
+                    }
+                } 
+                processKeyStrokes(keyStrokes);
+                keyStrokes.clear();
+                this.renderer.printInputLine(keyStrokes);
+            }
             this.renderer.getScreen().stopScreen();
         } catch (IOException e) {
             System.out.println(e);
@@ -49,5 +73,23 @@ public class Game {
         } catch (IOException e) {
             System.out.println(e);
         }
+    }
+
+    public void processKeyStrokes(ArrayList<KeyStroke> keyStrokes) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(KeyStroke keyStroke : keyStrokes) {
+            stringBuilder.append(keyStroke.getCharacter().toString());
+        }
+
+        String command = stringBuilder.toString();
+
+        switch (command) {
+            case "exit" -> this.renderer.getScreen().stopScreen();
+            case "nord" -> {
+                int[] position = {this.player.getPosition()[0]-1, this.player.getPosition()[1]};
+                this.player.setPosition(position);
+            }
+        }
+
     }
 }
