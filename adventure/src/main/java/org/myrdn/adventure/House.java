@@ -9,7 +9,7 @@ public final class House implements Serializable {
 
     public House(int[] startPosition, Room[][] rooms) {
         this.startPosition = startPosition;
-        this.rooms = rooms;
+        this.rooms         = rooms;
     }
 
     public int[] getStartPosition() {

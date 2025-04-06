@@ -24,10 +24,10 @@ public class Generator {
     private static final Random RANDOM          = new Random();
 
     public Generator(int xSize, int ySize, ArrayList<GameObject> availableObjects, ArrayList<ItemObject> availableItems) {
-        this.xSize = xSize;
-        this.ySize = ySize;
+        this.xSize  = xSize;
+        this.ySize  = ySize;
         this.layout = new int[ySize][xSize];
-        this.rooms = new Room[ySize][xSize];
+        this.rooms  = new Room[ySize][xSize];
         buildMap(availableItems, availableObjects);
     }
 
@@ -50,12 +50,12 @@ public class Generator {
     }
 
     private void generateStart() {
-        int yPos = this.ySize - 1;
-        int minX = this.xSize / 4;
-        int maxX = minX + this.xSize / 2;
-        int xPos = minX + RANDOM.nextInt(maxX - minX);
-        int[] genPos = {yPos, xPos};
-        this.startPosition = genPos;
+        int yPos                = this.ySize - 1;
+        int minX                = this.xSize / 4;
+        int maxX                = minX + this.xSize / 2;
+        int xPos                = minX + RANDOM.nextInt(maxX - minX);
+        int[] genPos            = {yPos, xPos};
+        this.startPosition      = genPos;
         this.layout[yPos][xPos] = this.startTile;
     }
 
@@ -94,13 +94,7 @@ public class Generator {
 
         while(!newObjects.isEmpty()) {
             for (int y = 0; y < this.layout.length; y++) {
-                if(newObjects.isEmpty()) {
-                    break;
-                }
                 for (int x = 0; x < layout[y].length; x++) {
-                    if(newObjects.isEmpty()) {
-                        break;
-                    }
                     Collections.shuffle(newObjects);
                     if(this.rooms[y][x].getObjects().size() < 2) {
                         int chance = RANDOM.nextInt(10);

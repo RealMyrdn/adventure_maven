@@ -12,10 +12,10 @@ public class Game {
     private Renderer renderer;
 
     public Game(int xSize, int ySize, String name) throws IOException  {
-        this.generator = new Generator(xSize, ySize, datahandler.loadObjects(), datahandler.loadItems());
-        this.house = new House(this.generator.getStartPosition(), this.generator.getRooms());
-        this.player = new Player(name ,house.getStartPosition());
-        this.savegame = new SaveGame(this.player, this.house);
+        this.generator    = new Generator(xSize, ySize, datahandler.loadObjects(), datahandler.loadItems());
+        this.house        = new House(this.generator.getStartPosition(), this.generator.getRooms());
+        this.player       = new Player(name ,house.getStartPosition());
+        this.savegame     = new SaveGame(this.player, this.house);
         try {
             this.renderer = new Renderer(xSize, ySize);
         } catch(IOException e) {
