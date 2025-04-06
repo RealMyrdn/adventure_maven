@@ -10,6 +10,7 @@ public class Generator {
     private final int xSize;
     private final int ySize;
     private final int[][] layout;
+    private final Room[][] rooms;
     private int startTile;
     private int[] startPosition;
 
@@ -22,15 +23,20 @@ public class Generator {
     private static final int DOOR_THRESHOLD     = 1;
     private static final Random RANDOM          = new Random();
 
-    public Generator(int xSize, int ySize) {
+    public Generator(int xSize, int ySize, ArrayList<GameObject> availableObjects, ArrayList<ItemObject> availableItems) {
         this.xSize = xSize;
         this.ySize = ySize;
         this.layout = new int[ySize][xSize];
-        buildMap();
+        this.rooms = new Room[ySize][xSize];
+        buildMap(availableItems, availableObjects);
     }
 
     public int[][] getLayout() {
         return this.layout;
+    }
+
+    public Room[][] getRooms() {
+        return this.rooms;
     }
 
     public int[] getStartPosition() {
@@ -43,14 +49,6 @@ public class Generator {
         return tiles.get(0);
     }
 
-    private void initializeLayout(int xSize, int ySize) {
-        for(int i = 0; i < ySize; i++) {
-            for(int j = 0; j < xSize; j++) {
-                this.layout[i][j] = 0;
-            }
-        }
-    }
-
     private void generateStart() {
         int yPos = this.ySize - 1;
         int minX = this.xSize / 4;
@@ -61,21 +59,103 @@ public class Generator {
         this.layout[yPos][xPos] = this.startTile;
     }
 
-    private void buildMap() {
+    private void initializeLayout(int xSize, int ySize) {
+        for(int i = 0; i < ySize; i++) {
+            for(int j = 0; j < xSize; j++) {
+                this.layout[i][j] = 0;
+            }
+        }
+    }
+
+    private void buildMap(ArrayList<ItemObject> availableItems, ArrayList<GameObject> availableObjects) {
         int count = 0;
         do {
             count++;
             this.startTile = generateStartTile();
             initializeLayout(this.xSize, this.ySize);
             generateStart();
-            placeRooms();
+            generateLayout();
             if(count > MAX_ATTEMPTS) {
                 throw new RuntimeException("Es konnte keine vollverbundene Karte nach " + MAX_ATTEMPTS + " Versuchen erstellt werden.");
             }
         } while(!isFullyConnected());
+        placeRooms(availableObjects, availableItems);
     }
 
-    private void placeRooms() {
+    public void placeRooms(ArrayList<GameObject> availableObjects, ArrayList<ItemObject> availableItems) {
+        ArrayList<GameObject> newObjects = fillObjects(availableObjects, availableItems);
+
+        for(int y = this.layout.length - 1; y >= 0; y--) {
+            for(int x = 0; x < this.layout[y].length; x++) {
+                Collections.shuffle(newObjects);
+                this.rooms[y][x] = new Room(this.layout[y][x], newObjects);
+            }
+        }
+
+        while(!newObjects.isEmpty()) {
+            for (int y = 0; y < this.layout.length; y++) {
+                if(newObjects.isEmpty()) {
+                    break;
+                }
+                for (int x = 0; x < layout[y].length; x++) {
+                    if(newObjects.isEmpty()) {
+                        break;
+                    }
+                    Collections.shuffle(newObjects);
+                    if(this.rooms[y][x].getObjects().size() < 2) {
+                        int chance = RANDOM.nextInt(10);
+                        if(chance >= 4) {
+                            this.rooms[y][x].getObjects().add(newObjects.get(0));
+                            newObjects.remove(0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private ArrayList<GameObject> fillObjects(ArrayList<GameObject> availableObjects, ArrayList<ItemObject> availableItems) {
+        Collections.shuffle(availableItems);
+        ArrayList<GameObject> newObjects = new ArrayList<>();
+
+        for(GameObject emptyObject : availableObjects) {
+            int maxStashes = emptyObject.getHiddenStashes();
+            int stashesUsed = 0;
+            int chance = RANDOM.nextInt(10);
+            for(int i = 0; i < maxStashes; i++) {
+                if(chance >= 6) {
+                    if(availableItems.isEmpty()) {
+                            break;
+                    }
+                    emptyObject.addtHiddenItem(availableItems.getFirst());
+                    availableItems.removeFirst();
+                    stashesUsed++;
+                }
+            }
+            emptyObject.setHiddenStashes(maxStashes - stashesUsed);
+            newObjects.add(emptyObject);
+        }
+
+        while(!availableItems.isEmpty()) {
+            for(GameObject object : newObjects) {
+                if(availableItems.isEmpty()) {
+                    break;
+                }
+                int chance = RANDOM.nextInt(10);
+                Collections.shuffle(availableItems);
+                if(chance >= 6) {
+                    if(object.getHiddenStashes() > 0) {
+                        object.addtHiddenItem(availableItems.getFirst());
+                        object.setHiddenStashes(object.getHiddenStashes()-1);
+                        availableItems.removeFirst();
+                    }
+                }
+            }
+        }
+        return newObjects;
+    }
+    
+    private void generateLayout() {
         for(int y = this.ySize-1; y >= 0; y--) {
             for(int x = 0; x < this.xSize; x++) {
                 if(this.layout[y][x] == 0) {
@@ -131,5 +211,4 @@ public class Generator {
         
         return count;
     }
-
 }

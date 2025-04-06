@@ -9,38 +9,8 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
 
 public class DataHandler {
-
-    private static final Random RANDOM = new Random();
-
-    public ArrayList<GameObject> generateItemObjects() throws NumberFormatException, IOException {
-        ArrayList <ItemObject> availableItems = loadItems();
-        ArrayList <GameObject> availableObjects = loadObjects();
-        Collections.shuffle(availableItems);
-        ArrayList<GameObject> newObjects = new ArrayList<>();
-        for(GameObject emptyObject : availableObjects) {
-            int maxStashes = emptyObject.getHiddenStashes();
-            int stashesUsed = 0;
-            int chance = RANDOM.nextInt(10);
-            for(int i = 0; i < maxStashes; i++) {
-                if(chance >= 6) {
-                    if(availableItems.isEmpty()) {
-                            break;
-                    }
-                    emptyObject.addtHiddenItem(availableItems.get(0));
-                    availableItems.remove(0);
-                    stashesUsed++;
-                }
-            }
-            emptyObject.setHiddenStashes(maxStashes - stashesUsed);
-            newObjects.add(emptyObject);
-        }
-        System.out.println("Verbleibende Items: " + availableItems.size());
-        return newObjects;
-    }
 
     public ArrayList<GameObject> loadObjects() throws NumberFormatException, IOException {
         ArrayList<GameObject> gameObjects = new ArrayList<>();

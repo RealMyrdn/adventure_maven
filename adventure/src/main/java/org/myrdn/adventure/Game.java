@@ -12,8 +12,8 @@ public class Game {
     private Renderer renderer;
 
     public Game(int xSize, int ySize, String name) throws IOException  {
-        this.generator = new Generator(xSize, ySize);
-        this.house = new House(this.generator.getStartPosition(), this.generator.getLayout(), datahandler.generateItemObjects());
+        this.generator = new Generator(xSize, ySize, datahandler.loadObjects(), datahandler.loadItems());
+        this.house = new House(this.generator.getStartPosition(), this.generator.getRooms());
         this.player = new Player(name ,house.getStartPosition());
         this.savegame = new SaveGame(this.player, this.house);
         try {
@@ -22,14 +22,6 @@ public class Game {
             System.out.println("Renderer konnte nicht initialisiert werden!");
             System.out.println(e);
         }
-    }
-
-    public Player getPlayer() {
-        return this.player;
-    }
-
-    public House getHouse() {
-        return this.house;
     }
 
     public void init() {
