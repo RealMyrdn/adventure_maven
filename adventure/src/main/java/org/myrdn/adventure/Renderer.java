@@ -116,16 +116,30 @@ public class Renderer {
         }
     }
 
-    public void printDescription(String description) throws IOException {
+    public void printRoomDescription(String description ,int height) throws IOException {
         this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
         this.textGraphics.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
         for(int y = 0; y < 8; y++) {
-            this.textGraphics.putString(40, 30 + y, "                                                               ");
+            this.textGraphics.putString(40, height + y, "                                                               ");
         }
         screen.refresh();
         String[] rows = description.split("\n");
         for(int y = 0; y < rows.length; y++) {
-            this.textGraphics.putString(40, 30 + y, rows[y]);
+            this.textGraphics.putString(40, height + y, rows[y]);
+        }
+        screen.refresh();
+    }
+
+    public void printDescription(String description ,int height) throws IOException {
+        this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
+        this.textGraphics.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
+        for(int y = 0; y < 8; y++) {
+            this.textGraphics.putString(40, height + y, "                                                               ");
+        }
+        screen.refresh();
+        String[] rows = description.split("\n");
+        for(int y = 0; y < rows.length; y++) {
+            this.textGraphics.putString(40, height + y, rows[y]);
         }
         screen.refresh();
     }
@@ -133,11 +147,9 @@ public class Renderer {
     public void printInputLine(ArrayList<KeyStroke> keyStrokes) throws IOException {
         this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
         this.textGraphics.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-        // if(keyStrokes.isEmpty()) {
             for (int i = 0; i < 40; i++) {
                 this.textGraphics.putString(10 + i, 35, " ");
             }
-        // }
         int j = 0;
         for(KeyStroke keyStroke : keyStrokes) {
             this.textGraphics.putString(10 + j, 35, keyStroke.getCharacter().toString());

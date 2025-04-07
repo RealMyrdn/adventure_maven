@@ -52,7 +52,7 @@ public class Game {
             ArrayList<KeyStroke> keyStrokes = new ArrayList<>();
             while(isRunning) {
                 this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
-                this.renderer.printDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
+                this.renderer.printRoomDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo(), 20);
                 while(true) {
                     keyStroke = this.renderer.getTerminal().readInput();
                     keyType = keyStroke.getKeyType();
@@ -126,7 +126,7 @@ public class Game {
             }
             case "untersuche" -> {
                 switch(target) {
-                    case "raum" -> this.renderer.printDescription(this.house.getRoom(this.player.getPosition()[1], this.player.getPosition()[0]).getRoomObjects());
+                    case "raum" -> this.renderer.printDescription(this.house.getRoom(this.player.getPosition()[1], this.player.getPosition()[0]).getRoomObjects(), 25);
                 }
             }
         }
