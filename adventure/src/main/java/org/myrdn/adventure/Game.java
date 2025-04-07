@@ -2,6 +2,7 @@ package org.myrdn.adventure;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -64,7 +65,7 @@ public class Game {
                         this.renderer.printInputLine(keyStrokes);
                     }
                 } 
-                processKeyStrokes(keyStrokes);
+                executeInstructions(processKeyStrokes(keyStrokes));
                 keyStrokes.clear();
                 this.renderer.printInputLine(keyStrokes);
             }
@@ -73,15 +74,34 @@ public class Game {
         }
     }
 
-    public void processKeyStrokes(ArrayList<KeyStroke> keyStrokes) throws IOException {
+    public ArrayList<String> processKeyStrokes(ArrayList<KeyStroke> keyStrokes) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
+        ArrayList<String> instructions = new ArrayList<>();
+
         for(KeyStroke keyStroke : keyStrokes) {
             stringBuilder.append(keyStroke.getCharacter().toString());
         }
 
-        String command = stringBuilder.toString();
-        int value = this.house.getRoom(this.player.getPosition()[0], this.player.getPosition()[1]).getRoomType();
+        String command = stringBuilder.toString().toLowerCase();
+        String[] commands = command.split(" ");
+        instructions.addAll(Arrays.asList(commands));
+        
+        return instructions;
+    }
 
+    public void executeInstructions(ArrayList<String> instructions) {
+        int value = this.house.getRoom(this.player.getPosition()[1], this.player.getPosition()[0]).getRoomType();
+        System.out.println(value);
+        String command = instructions.getFirst();
+        String target = "";
+        if(instructions.size() > 1) {
+            target = instructions.get(1);
+        }
+        if(instructions.size() > 2) {
+            for(int i = 2; i < instructions.size() + 1; i++) {
+                target += " " + instructions.get(i);
+            }
+        }
         switch (command) {
             case "exit" -> {            
                 try {
@@ -91,31 +111,53 @@ public class Game {
                 }
                 System.exit(0);
             }
-            case "nord", "Nord", "gehe nord", "gehe Nord" -> {
-                if((value & 0b0100) != 0) {
-                    int[] position = {this.player.getPosition()[0] - 1, this.player.getPosition()[1]};
-                    this.player.setPosition(position);
+            case "gehe" -> {
+                switch(target) {
+                    case "nord" -> {
+                        north(value);
+                    }
+                    case "süd" -> {
+                        south(value);
+                    }
+                    case "west" -> {
+                        west(value);
+                    }
+                    case "ost" -> {
+                        east(value);
+                    }
                 }
             }
-            case "süd", "Süd", "gehe süd", "gehe Süd" -> {
-                if((value & 0b0001) != 0 && this.player.getPosition()[0] + 1 < this.generator.getYSize()) {
-                    int[] position = {this.player.getPosition()[0] + 1, this.player.getPosition()[1]};
-                    this.player.setPosition(position);
-                }
-            }
-            case "west", "West", "gehe west", "gehe West" -> {
-                if((value & 0b1000) != 0) {
-                    int[] position = {this.player.getPosition()[0], this.player.getPosition()[1] - 1};
-                    this.player.setPosition(position);
-                }
-            }
-            case "ost", "Ost", "gehe ost", "gehe Ost" -> {
-                if((value & 0b0010) != 0) {
-                    int[] position = {this.player.getPosition()[0], this.player.getPosition()[1] + 1};
-                    this.player.setPosition(position);
-                }
+            case "untersuche" -> {
+
             }
         }
+    }
+    
+    public void north(int value) {
+        if((value & 0b0100) != 0) {
+            int[] position = {this.player.getPosition()[0] - 1, this.player.getPosition()[1]};
+            this.player.setPosition(position);
+        }
+    }
 
+    public void south(int value) {
+        if((value & 0b0001) != 0 && this.player.getPosition()[0] + 1 < this.generator.getYSize()) {
+            int[] position = {this.player.getPosition()[0] + 1, this.player.getPosition()[1]};
+            this.player.setPosition(position);
+        }
+    }
+
+    public void west(int value) {
+        if((value & 0b0010) != 0) {
+            int[] position = {this.player.getPosition()[0], this.player.getPosition()[1] - 1};
+            this.player.setPosition(position);
+        }
+    }
+
+    public void east(int value) {
+        if((value & 0b1000) != 0) {
+            int[] position = {this.player.getPosition()[0], this.player.getPosition()[1] + 1};
+            this.player.setPosition(position);
+        }
     }
 }

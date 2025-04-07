@@ -1,6 +1,8 @@
 package org.myrdn.adventure;
 
-public class ItemObject {
+import java.io.Serializable;
+
+public class ItemObject implements Serializable {
 
     private static int counter = 0;
     private final int id;
