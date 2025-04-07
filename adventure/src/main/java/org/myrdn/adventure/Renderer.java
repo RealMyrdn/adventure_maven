@@ -129,11 +129,11 @@ public class Renderer {
     public void printInputLine(ArrayList<KeyStroke> keyStrokes) throws IOException {
         this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
         this.textGraphics.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-        if(keyStrokes.isEmpty()) {
+        // if(keyStrokes.isEmpty()) {
             for (int i = 0; i < 40; i++) {
                 this.textGraphics.putString(10 + i, 35, " ");
             }
-        }
+        // }
         int j = 0;
         for(KeyStroke keyStroke : keyStrokes) {
             this.textGraphics.putString(10 + j, 35, keyStroke.getCharacter().toString());

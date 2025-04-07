@@ -31,6 +31,14 @@ public class Generator {
         buildMap(availableItems, availableObjects);
     }
 
+    public int getXSize() {
+        return this.xSize;
+    }
+
+    public int getYSize() {
+        return this.ySize;
+    }
+
     public int[][] getLayout() {
         return this.layout;
     }
@@ -98,7 +106,7 @@ public class Generator {
                     Collections.shuffle(newObjects);
                     if(this.rooms[y][x].getObjects().size() < 2) {
                         int chance = RANDOM.nextInt(10);
-                        if(chance >= 4) {
+                        if(chance >= 4 && !newObjects.isEmpty()) {
                             this.rooms[y][x].getObjects().add(newObjects.get(0));
                             newObjects.remove(0);
                         }

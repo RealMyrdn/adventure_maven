@@ -55,8 +55,12 @@ public class Game {
                     if(keyType == KeyType.Enter) {
                         break;
                     }
-                    if(keyStrokes.size() < 40 && keyStroke.getCharacter() != null) {
+                    if(keyStrokes.size() < 40 && keyType == KeyType.Character) {
                         keyStrokes.add(keyStroke);
+                        this.renderer.printInputLine(keyStrokes);
+                    }
+                    if(!keyStrokes.isEmpty() && keyType == KeyType.Backspace) {
+                        keyStrokes.removeLast();
                         this.renderer.printInputLine(keyStrokes);
                     }
                 } 
@@ -64,12 +68,6 @@ public class Game {
                 keyStrokes.clear();
                 this.renderer.printInputLine(keyStrokes);
             }
-            this.renderer.getScreen().stopScreen();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-        try {
-            datahandler.saveGame(savegame);
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -82,12 +80,40 @@ public class Game {
         }
 
         String command = stringBuilder.toString();
+        int value = this.house.getRoom(this.player.getPosition()[0], this.player.getPosition()[1]).getRoomType();
 
         switch (command) {
-            case "exit" -> this.renderer.getScreen().stopScreen();
-            case "nord", "gehe nord" -> {
-                int[] position = {this.player.getPosition()[0]-1, this.player.getPosition()[1]};
-                this.player.setPosition(position);
+            case "exit" -> {            
+                try {
+                    datahandler.saveGame(savegame);
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                System.exit(0);
+            }
+            case "nord", "Nord", "gehe nord", "gehe Nord" -> {
+                if((value & 0b0100) != 0) {
+                    int[] position = {this.player.getPosition()[0] - 1, this.player.getPosition()[1]};
+                    this.player.setPosition(position);
+                }
+            }
+            case "süd", "Süd", "gehe süd", "gehe Süd" -> {
+                if((value & 0b0001) != 0 && this.player.getPosition()[0] + 1 < this.generator.getYSize()) {
+                    int[] position = {this.player.getPosition()[0] + 1, this.player.getPosition()[1]};
+                    this.player.setPosition(position);
+                }
+            }
+            case "west", "West", "gehe west", "gehe West" -> {
+                if((value & 0b1000) != 0) {
+                    int[] position = {this.player.getPosition()[0], this.player.getPosition()[1] - 1};
+                    this.player.setPosition(position);
+                }
+            }
+            case "ost", "Ost", "gehe ost", "gehe Ost" -> {
+                if((value & 0b0010) != 0) {
+                    int[] position = {this.player.getPosition()[0], this.player.getPosition()[1] + 1};
+                    this.player.setPosition(position);
+                }
             }
         }
 
