@@ -85,7 +85,7 @@ public class Game {
 
         switch (command) {
             case "exit" -> this.renderer.getScreen().stopScreen();
-            case "nord" -> {
+            case "nord", "gehe nord" -> {
                 int[] position = {this.player.getPosition()[0]-1, this.player.getPosition()[1]};
                 this.player.setPosition(position);
             }

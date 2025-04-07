@@ -57,9 +57,9 @@ public class Room implements Serializable {
                 stringbuilder.append("Als du dich umschaust, siehst du ").append(this.objects.size()).append(" Objekte, die hier verstreut herumstehen.\n");
             }
     
-            for(GameObject object : this.objects) {
-                stringbuilder.append(object.getName()).append("\n");
-            }
+            // for(GameObject object : this.objects) {
+            //     stringbuilder.append(object.getName()).append("\n");
+            // }
     
         } else {
             stringbuilder.append("Hier scheint es nichts von Interesse zu geben.\n");
