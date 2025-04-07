@@ -116,9 +116,13 @@ public class Renderer {
         }
     }
 
-    public void printRoomDescription(String description) throws IOException {
+    public void printDescription(String description) throws IOException {
         this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
         this.textGraphics.setForegroundColor(TextColor.ANSI.CYAN_BRIGHT);
+        for(int y = 0; y < 8; y++) {
+            this.textGraphics.putString(40, 30 + y, "                                                               ");
+        }
+        screen.refresh();
         String[] rows = description.split("\n");
         for(int y = 0; y < rows.length; y++) {
             this.textGraphics.putString(40, 30 + y, rows[y]);

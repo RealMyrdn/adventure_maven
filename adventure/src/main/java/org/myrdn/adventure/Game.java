@@ -9,6 +9,11 @@ import com.googlecode.lanterna.input.KeyType;
 
 public class Game {
 
+    private static final int NORTH = 0b0100;
+    private static final int SOUTH = 0b0001;
+    private static final int WEST  = 0b0010;
+    private static final int EAST  = 0b1000;
+
     private final House house;
     private final Player player;
     private final Generator generator;
@@ -47,7 +52,7 @@ public class Game {
             ArrayList<KeyStroke> keyStrokes = new ArrayList<>();
             while(isRunning) {
                 this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
-                this.renderer.printRoomDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
+                this.renderer.printDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo());
                 while(true) {
                     keyStroke = this.renderer.getTerminal().readInput();
                     keyType = keyStroke.getKeyType();
@@ -85,11 +90,11 @@ public class Game {
         String command = stringBuilder.toString().toLowerCase();
         String[] commands = command.split(" ");
         instructions.addAll(Arrays.asList(commands));
-        
+
         return instructions;
     }
 
-    public void executeInstructions(ArrayList<String> instructions) {
+    public void executeInstructions(ArrayList<String> instructions) throws IOException {
         int value = this.house.getRoom(this.player.getPosition()[1], this.player.getPosition()[0]).getRoomType();
         System.out.println(value);
         String command = instructions.getFirst();
@@ -113,51 +118,25 @@ public class Game {
             }
             case "gehe" -> {
                 switch(target) {
-                    case "nord" -> {
-                        north(value);
-                    }
-                    case "süd" -> {
-                        south(value);
-                    }
-                    case "west" -> {
-                        west(value);
-                    }
-                    case "ost" -> {
-                        east(value);
-                    }
+                    case "nord" -> move(  -1, 0, NORTH, value);
+                    case "süd"  -> move(1, 0, SOUTH, value);
+                    case "west" -> move(0,   -1,  WEST, value);
+                    case "ost"  -> move(0, 1,  EAST, value);
                 }
             }
             case "untersuche" -> {
-
+                switch(target) {
+                    case "raum" -> this.renderer.printDescription(this.house.getRoom(this.player.getPosition()[1], this.player.getPosition()[0]).getRoomObjects());
+                }
             }
         }
     }
-    
-    public void north(int value) {
-        if((value & 0b0100) != 0) {
-            int[] position = {this.player.getPosition()[0] - 1, this.player.getPosition()[1]};
-            this.player.setPosition(position);
-        }
-    }
 
-    public void south(int value) {
-        if((value & 0b0001) != 0 && this.player.getPosition()[0] + 1 < this.generator.getYSize()) {
-            int[] position = {this.player.getPosition()[0] + 1, this.player.getPosition()[1]};
-            this.player.setPosition(position);
-        }
-    }
-
-    public void west(int value) {
-        if((value & 0b0010) != 0) {
-            int[] position = {this.player.getPosition()[0], this.player.getPosition()[1] - 1};
-            this.player.setPosition(position);
-        }
-    }
-
-    public void east(int value) {
-        if((value & 0b1000) != 0) {
-            int[] position = {this.player.getPosition()[0], this.player.getPosition()[1] + 1};
-            this.player.setPosition(position);
+    private void move(int dx, int dy, int directionBit, int value) {
+        if ((value & directionBit) != 0) {
+            int newX = this.player.getPosition()[0] + dx;
+            int newY = this.player.getPosition()[1] + dy;
+            this.player.setPosition(new int[] { newX, newY });
         }
     }
 }

@@ -57,14 +57,24 @@ public class Room implements Serializable {
                 stringbuilder.append("Als du dich umschaust, siehst du ").append(this.objects.size()).append(" Objekte, die hier verstreut herumstehen.\n");
             }
     
-            // for(GameObject object : this.objects) {
-            //     stringbuilder.append(object.getName()).append("\n");
-            // }
-    
         } else {
             stringbuilder.append("Hier scheint es nichts von Interesse zu geben.\n");
         }
     
+    }
+
+    public String getRoomObjects() {
+
+        StringBuilder stringbuilder = new StringBuilder();
+        if(!this.objects.isEmpty()) {
+            stringbuilder.append("In diesem Raum sind folgende Objekte: \n");
+        } else {
+            stringbuilder.append("In diesem Raum ist nichts von Interesse.");
+        }
+        for(GameObject object : this.objects) {
+            stringbuilder.append(object.getName()).append("\n");
+        }
+        return stringbuilder.toString();
     }
 
     private void checkExits(int doors, StringBuilder stringbuilder) {
