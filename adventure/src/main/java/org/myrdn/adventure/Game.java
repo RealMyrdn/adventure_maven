@@ -52,10 +52,10 @@ public class Game {
                     keyType = keyStroke.getKeyType();
                     System.out.println("KeyType: " + keyType);
                     System.out.println("Char: " + keyStroke.getCharacter());
-                    if(keyType == KeyType.Enter || keyType == KeyType.Escape) {
+                    if(keyType == KeyType.Enter) {
                         break;
                     }
-                    if(keyStrokes.size() < 40) {
+                    if(keyStrokes.size() < 40 && keyStroke.getCharacter() != null) {
                         keyStrokes.add(keyStroke);
                         this.renderer.printInputLine(keyStrokes);
                     }
