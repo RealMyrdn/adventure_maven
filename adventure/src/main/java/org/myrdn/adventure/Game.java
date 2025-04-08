@@ -67,8 +67,8 @@ public class Game {
                 keyStroke = this.renderer.getTerminal().readInput();
                 keyType = keyStroke.getKeyType();
 
-                System.out.println("KeyType: " + keyType);
-                System.out.println("Char: " + keyStroke.getCharacter());
+                // System.out.println("KeyType: " + keyType);
+                // System.out.println("Char: " + keyStroke.getCharacter());
 
                 if (keyType == KeyType.Enter) {
                     break;
@@ -169,7 +169,7 @@ public class Game {
             case "untersuche" -> {
                 switch(instructions.get(1)) {
                     case "raum" -> {
-                        this.renderer.printDescription(this.house.getRoom(this.player.getPosition()[1], this.player.getPosition()[0]).getRoomObjects(), 25);
+                        this.renderer.printDescription(this.house.getRoom(this.player.getPosition()[1], this.player.getPosition()[0]).getRoomObjects(), 5);
                         this.renderer.renderFrame();
                     }
                 }
