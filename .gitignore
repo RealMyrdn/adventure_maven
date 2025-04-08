@@ -5,3 +5,5 @@
 /adventure/.vscode
 /adventure/.project
 /adventure/target/classes/classes/*
+
+.fake
