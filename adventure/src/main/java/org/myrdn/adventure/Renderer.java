@@ -38,7 +38,7 @@ public class Renderer {
         this.myFontConfiguration = SwingTerminalFontConfiguration.newInstance(myFont);
         this.xSize = xSize;
         this.ySize = ySize;
-        this.mapFound = false;
+        this.mapFound = true;
     }
 
     public Terminal getTerminal() {
@@ -169,11 +169,11 @@ public class Renderer {
                 stringBuilder.append("\n").append(word).append(" ");
             }
         }
-
+        stringBuilder.append("\n");
         if(!itemObjects.isEmpty()) {
             stringBuilder.append("Das Objekte enthält folgende Gegenstände: \n");
             for(ItemObject item : itemObjects) {
-                stringBuilder.append(item.getName()).append(" ");
+                stringBuilder.append(item.getName()).append("\n");
             }
         }
         String objectDescription = stringBuilder.toString();

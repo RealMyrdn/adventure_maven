@@ -9,9 +9,9 @@ import com.googlecode.lanterna.input.KeyType;
 
 public class Game {
 
-    private static final int NORTH = 0b0100;
     private static final int SOUTH = 0b0001;
     private static final int WEST  = 0b0010;
+    private static final int NORTH = 0b0100;
     private static final int EAST  = 0b1000;
 
     private final House house;
@@ -131,9 +131,9 @@ public class Game {
             }
             case "gehe" -> {
                 switch(instructions.get(1)) {
-                    case "nord" -> move(  -1, 0, NORTH, value);
                     case "süd"  -> move(1, 0, SOUTH, value);
                     case "west" -> move(0,   -1,  WEST, value);
+                    case "nord" -> move(  -1, 0, NORTH, value);
                     case "ost"  -> move(0, 1,  EAST, value);
                 }
             }
@@ -148,12 +148,21 @@ public class Game {
                         objects = this.house.getRoom(xPos, yPos).getObjects();
                         for(GameObject object : objects) {
                             if(object.getName().toLowerCase().equals(instructions.get(1))) {
-                                this.renderer.printObjectDescription(object.getDescription(), object.getHiddenItems(), 15);
+                                this.renderer.printObjectDescription(object.getDescription(), object.getHiddenItems(), 10);
                                 this.renderer.renderFrame();
                             }
                         }
                     }
                 }
+            }
+            case "nimm" -> {
+
+            }
+            case "inventar" -> {
+
+            }
+            case "benutze" -> {
+                
             }
         }
     }
