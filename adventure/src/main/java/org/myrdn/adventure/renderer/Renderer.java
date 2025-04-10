@@ -1,4 +1,4 @@
-package org.myrdn.adventure;
+package org.myrdn.adventure.renderer;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -6,6 +6,8 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import org.myrdn.adventure.ItemObject;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
@@ -28,8 +30,8 @@ public class Renderer {
     private Screen screen;
     private TextGraphics textGraphics;
     private final TerminalSize size;
-    private final int xSize;
-    private final int ySize;
+    protected final int xSize;
+    protected final int ySize;
     private boolean mapFound;
 
     public Renderer(int xSize, int ySize) throws IOException {
@@ -38,7 +40,7 @@ public class Renderer {
         this.myFontConfiguration = SwingTerminalFontConfiguration.newInstance(myFont);
         this.xSize = xSize;
         this.ySize = ySize;
-        this.mapFound = true;
+        this.mapFound = false;
     }
 
     public Terminal getTerminal() {
@@ -47,6 +49,10 @@ public class Renderer {
 
     public Screen getScreen() {
         return this.screen;
+    }
+
+    public TextGraphics getTextGraphics() {
+        return this.textGraphics;
     }
 
     public void setMapFound(boolean mapFound) {
@@ -203,4 +209,8 @@ public class Renderer {
             j++;
         }
     }
+
+    // void printItemDescription(String description, int height) {
+    //     throw new UnsupportedOperationException("Not supported yet.");
+    // }
 }

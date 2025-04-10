@@ -165,7 +165,7 @@ public class Generator {
                     int counter = 0;
                     do {
                         counter++;
-                        value = checkDoors(y, x, value);
+                        value = checkDoors(x, y, value);
                         this.layout[y][x] = value;
                         if(counter > MAX_ROOM_ATTEMPTS) {
                             break;
@@ -183,7 +183,7 @@ public class Generator {
         return value;
     }
 
-    private int checkDoors(int y, int x, int value) {
+    private int checkDoors(int x, int y, int value) {
         value = checkDirection(value, DOOR_DOWN,  y + 1, x, 0b0100);
         value = checkDirection(value, DOOR_LEFT,  y, x - 1, 0b1000);
         value = checkDirection(value, DOOR_UP,    y - 1, x, 0b0001);

@@ -30,6 +30,14 @@ public class Player implements Serializable {
         return this.position;
     }
 
+    public int getX() {
+        return this.position[1];
+    }
+
+    public int getY() {
+        return this.position[0];
+    } 
+
     public void setPosition(int[] position) {
         this.position = position;
     }

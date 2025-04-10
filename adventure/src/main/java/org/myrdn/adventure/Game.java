@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.myrdn.adventure.renderer.Renderer;
+
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
@@ -23,6 +25,7 @@ public class Game {
     private int xPos;
     private int yPos;
     private ArrayList<GameObject> objects = new ArrayList<>();
+    private GameObject activeObject = null;
 
     public Game(int xSize, int ySize, String name) throws IOException  {
         this.generator    = new Generator(xSize, ySize, datahandler.loadObjects(), datahandler.loadItems());
@@ -131,10 +134,10 @@ public class Game {
             }
             case "gehe" -> {
                 switch(instructions.get(1)) {
-                    case "süd"  -> move(1, 0, SOUTH, value);
-                    case "west" -> move(0,   -1,  WEST, value);
-                    case "nord" -> move(  -1, 0, NORTH, value);
-                    case "ost"  -> move(0, 1,  EAST, value);
+                    case "süd"  -> move(0, 1, SOUTH, value);
+                    case "west" -> move(  -1, 0,  WEST, value);
+                    case "nord" -> move(0,   -1, NORTH, value);
+                    case "ost"  -> move(1, 0,  EAST, value);
                 }
             }
             case "untersuche" -> {
@@ -148,8 +151,16 @@ public class Game {
                         objects = this.house.getRoom(xPos, yPos).getObjects();
                         for(GameObject object : objects) {
                             if(object.getName().toLowerCase().equals(instructions.get(1))) {
+                                this.activeObject = object;
                                 this.renderer.printObjectDescription(object.getDescription(), object.getHiddenItems(), 10);
                                 this.renderer.renderFrame();
+                            }
+                        }
+                        if(activeObject != null) {
+                            for(ItemObject item : activeObject.getHiddenItems()) {
+                                if(item.getName().toLowerCase().equals(instructions.get(1))) {
+                                    // this.renderer.printItemDescription(item.getDescription(), 25);
+                                }
                             }
                         }
                     }
@@ -169,9 +180,9 @@ public class Game {
 
     private void move(int dx, int dy, int directionBit, int value) {
         if ((value & directionBit) != 0) {
-            int newX = this.player.getPosition()[0] + dx;
-            int newY = this.player.getPosition()[1] + dy;
-            this.player.setPosition(new int[] { newX, newY });
+            int newX = this.xPos + dx;
+            int newY = this.yPos + dy;
+            this.player.setPosition(new int[] { newY, newX });
         }
     }
 }
