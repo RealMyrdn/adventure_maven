@@ -13,40 +13,50 @@ public class TextBox {
     private final ArrayList<String> formattedText;
 
     public TextBox(int xPos, int yPos, int width, int height, String text) {
+
         this.xPos          = xPos;
         this.yPos          = yPos;
         this.height        = height;
         this.width         = width;
         this.text          = text;
         this.formattedText = formatText();
+    
     }
 
     public int getXPos() {
+
         return this.xPos;
+
     }
 
     public int getYPos() {
+
         return this.yPos;
+
     }
 
     public int getHeight() {
+
         return this.height;
+
     }
 
     public int getWidth() {
+
         return this.width;
+
     }
 
     private ArrayList<String> formatText() {
         
         int charCounter = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        ArrayList<String> formatText = new ArrayList<>();
         ArrayList<String> textList = new ArrayList<>(Arrays.asList(this.text.split(" ")));
+        ArrayList<String> formatText = new ArrayList<>();
 
         for(String word : textList) {
             
-            if(charCounter + word.length() < width) {
+            if(charCounter + word.length() < width && !word.equals("\n")) {
             
                 stringBuilder.append(word).append(" ");
                 charCounter += word.length() + 1;
@@ -64,6 +74,7 @@ public class TextBox {
         }
 
         return formatText;
+
     }
 
 }

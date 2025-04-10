@@ -17,41 +17,63 @@ public class Map {
     private boolean mapFound;
 
     private Map(Renderer renderer, Player player, Room[][] rooms, int mapX, int mapY) {
+
         this.renderer = renderer;
-        this.player = player;
-        this.rooms = rooms;
-        this.mapX = mapX;
-        this.mapY = mapY;
-        this.xPos = player.getX();
-        this.yPos = player.getY();
+        this.player   = player;
+        this.rooms    = rooms;
+        this.mapX     = mapX;
+        this.mapY     = mapY;
+        this.xPos     = player.getX();
+        this.yPos     = player.getY();
         this.mapFound = false;
+    
     }
 
     public void setMapFound() {
+    
         this.mapFound = true;
+    
     }
 
     public static Map createMap(Renderer renderer, Player player, Room[][] rooms, int mapX, int mapY) {
+    
         if(map == null) {
-            map = new Map(renderer, player, rooms, mapX, mapY);
+    
+            synchronized (Map.class) {
+    
+                map = new Map(renderer, player, rooms, mapX, mapY);
+    
+            }
+    
         }
+    
         return map;
+    
     }
 
     public void update() {
 
-        this.xPos = player.getPosition()[1];
-        this.yPos = player.getPosition()[0];
+        this.xPos = player.getX();
+        this.yPos = player.getY();
 
         for(int y = 0; y < this.rooms.length; y++) {
+    
             for(int x = 0; x < this.rooms[y].length; x++) {
+    
                 if(mapFound || (this.xPos == x && this.yPos == y)) {
+    
                     renderer.getTextGraphics().putString(x + mapX, y + mapY, String.valueOf(symbols[rooms[y][x].getRoomType()]));
+    
                 } else {
+    
                     renderer.getTextGraphics().putString(x + mapX, y + mapY, " ");
+    
                 }
+    
             }
+    
         }
+    
     }
 
 }
