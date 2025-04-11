@@ -9,22 +9,22 @@ public class Map {
     private final Renderer renderer;
     private final Player player;
     private final Room[][] rooms;
-    private final int mapX;
-    private final int mapY;
-    private int xPos;
-    private int yPos;
+    private final int mapPosX;
+    private final int mapPosY;
+    private int playerPosX;
+    private int playerPosY;
     private boolean mapFound;
 
-    private Map(Renderer renderer, Player player, Room[][] rooms, int mapX, int mapY) {
+    private Map(Renderer renderer, Player player, Room[][] rooms, int mapPosX, int mapPosY) {
 
-        this.renderer = renderer;
-        this.player   = player;
-        this.rooms    = rooms;
-        this.mapX     = mapX;
-        this.mapY     = mapY;
-        this.xPos     = player.getX();
-        this.yPos     = player.getY();
-        this.mapFound = false;
+        this.renderer   = renderer;
+        this.player     = player;
+        this.rooms      = rooms;
+        this.mapPosX    = mapPosX;
+        this.mapPosY    = mapPosY;
+        this.playerPosX = player.getX();
+        this.playerPosY = player.getY();
+        this.mapFound   = false;
     
     }
 
@@ -34,13 +34,13 @@ public class Map {
     
     }
 
-    public static Map createMap(Renderer renderer, Player player, Room[][] rooms, int mapX, int mapY) {
+    public static Map createMap(Renderer renderer, Player player, Room[][] rooms, int mapPosX, int mapPosY) {
     
         if(map == null) {
     
             synchronized (Map.class) {
     
-                map = new Map(renderer, player, rooms, mapX, mapY);
+                map = new Map(renderer, player, rooms, mapPosX, mapPosY);
     
             }
     
@@ -52,20 +52,20 @@ public class Map {
 
     public void update() {
 
-        this.xPos = player.getX();
-        this.yPos = player.getY();
+        this.playerPosX = player.getX();
+        this.playerPosY = player.getY();
 
         for(int y = 0; y < this.rooms.length; y++) {
     
             for(int x = 0; x < this.rooms[y].length; x++) {
     
-                if(mapFound || (this.xPos == x && this.yPos == y)) {
+                if(mapFound || (this.playerPosX == x && this.playerPosY == y)) {
     
-                    renderer.getTextGraphics().putString(x + mapX, y + mapY, RoomType.fromIndex(rooms[y][x].getRoomType()));
+                    renderer.getTextGraphics().putString(x + mapPosX, y + mapPosY, RoomType.fromIndex(rooms[y][x].getRoomType()));
                     
                 } else {
     
-                    renderer.getTextGraphics().putString(x + mapX, y + mapY, " ");
+                    renderer.getTextGraphics().putString(x + mapPosX, y + mapPosY, " ");
     
                 }
     

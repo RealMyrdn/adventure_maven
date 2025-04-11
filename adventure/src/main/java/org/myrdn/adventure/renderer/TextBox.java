@@ -5,17 +5,17 @@ import java.util.Arrays;
 
 public class TextBox {
 
-    private final int xPos;
-    private final int yPos;
+    private final int mapPosX;
+    private final int mapPosY;
     private final int height;
     private final int width;
     private final String text;
     private final ArrayList<String> formattedText;
 
-    public TextBox(int xPos, int yPos, int width, int height, String text) {
+    public TextBox(int mapPosX, int mapPosY, int width, int height, String text) {
 
-        this.xPos          = xPos;
-        this.yPos          = yPos;
+        this.mapPosX          = mapPosX;
+        this.mapPosY          = mapPosY;
         this.height        = height;
         this.width         = width;
         this.text          = text;
@@ -23,15 +23,15 @@ public class TextBox {
     
     }
 
-    public int getXPos() {
+    public int getmapPosX() {
 
-        return this.xPos;
+        return this.mapPosX;
 
     }
 
-    public int getYPos() {
+    public int getmapPosY() {
 
-        return this.yPos;
+        return this.mapPosY;
 
     }
 
