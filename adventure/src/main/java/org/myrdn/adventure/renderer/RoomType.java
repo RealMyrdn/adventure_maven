@@ -2,11 +2,11 @@ package org.myrdn.adventure.renderer;
 
 public final class RoomType {
 
-    private static final char[] symbol = {'█','╻','╸','┓','╹','┃','┛','┫','╺','┏','━','┳','┗','┣','┻','╋'};
+    private static final String[] symbol = {"█","╻","╸","┓","╹","┃","┛","┫","╺","┏","━","┳","┗","┣","┻","╋"};
 
     public static String fromIndex(int index) {
 
-        return String.valueOf(symbol[index]);
+        return symbol[index];
     
     }
 
