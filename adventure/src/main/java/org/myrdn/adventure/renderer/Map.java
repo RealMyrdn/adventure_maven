@@ -6,7 +6,6 @@ import org.myrdn.adventure.Room;
 public class Map {
 
     private static volatile Map map;
-    private final char[] symbols = {'█','╻','╸','┓','╹','┃','┛','┫','╺','┏','━','┳','┗','┣','┻','╋'};
     private final Renderer renderer;
     private final Player player;
     private final Room[][] rooms;
@@ -62,8 +61,8 @@ public class Map {
     
                 if(mapFound || (this.xPos == x && this.yPos == y)) {
     
-                    renderer.getTextGraphics().putString(x + mapX, y + mapY, String.valueOf(RoomType.getSymbol(rooms[y][x].getRoomType())));
-    
+                    renderer.getTextGraphics().putString(x + mapX, y + mapY, RoomType.fromIndex(rooms[y][x].getRoomType()));
+                    
                 } else {
     
                     renderer.getTextGraphics().putString(x + mapX, y + mapY, " ");

@@ -4,9 +4,9 @@ public final class RoomType {
 
     private static final char[] symbol = {'█','╻','╸','┓','╹','┃','┛','┫','╺','┏','━','┳','┗','┣','┻','╋'};
 
-    public static char getSymbol(int index) {
+    public static String fromIndex(int index) {
 
-        return symbol[index];
+        return String.valueOf(symbol[index]);
     
     }
 
