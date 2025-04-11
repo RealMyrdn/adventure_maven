@@ -62,7 +62,7 @@ public class Map {
     
                 if(mapFound || (this.xPos == x && this.yPos == y)) {
     
-                    renderer.getTextGraphics().putString(x + mapX, y + mapY, String.valueOf(symbols[rooms[y][x].getRoomType()]));
+                    renderer.getTextGraphics().putString(x + mapX, y + mapY, String.valueOf(RoomType.getSymbol(rooms[y][x].getRoomType())));
     
                 } else {
     
