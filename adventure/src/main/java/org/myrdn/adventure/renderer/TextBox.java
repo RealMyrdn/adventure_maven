@@ -14,8 +14,8 @@ public class TextBox {
 
     public TextBox(int mapPosX, int mapPosY, int width, int height, String text) {
 
-        this.mapPosX          = mapPosX;
-        this.mapPosY          = mapPosY;
+        this.mapPosX       = mapPosX;
+        this.mapPosY       = mapPosY;
         this.height        = height;
         this.width         = width;
         this.text          = text;
