@@ -8,8 +8,8 @@ public class Main {
 
     public static void main(String[] args) {
         
-        int ySize = 10;
-        int xSize = 20;
+        int ySize = 7;
+        int xSize = 13;
         
         try {
         

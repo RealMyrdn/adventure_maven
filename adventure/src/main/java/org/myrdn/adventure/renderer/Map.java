@@ -87,7 +87,7 @@ public final class Map {
         borderedMap[newHeight - 1][0] = '╚';
         borderedMap[newHeight - 1][newWidth - 1] = '╝';
 
-        String title = "╡ Haus ╞";
+        String title = "╡ Karte ╞";
 
         int titleLength = title.length();
         int availableSpace = newWidth - 2;

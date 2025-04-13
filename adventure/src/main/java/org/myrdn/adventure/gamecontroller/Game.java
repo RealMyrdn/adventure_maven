@@ -275,7 +275,7 @@ public class Game {
 
     private void move(int dx, int dy, int directionBit, int value) {
 
-        if ((value & directionBit) != 0) {
+        if ((value & directionBit) != 0 && this.yPos + dy < layout.getYSize()) {
 
             int newX = this.xPos + dx;
             int newY = this.yPos + dy;

@@ -163,18 +163,22 @@ public class Renderer {
 
     public void render(ArrayList<Object> objects) {
 
-        int canvasPosX   = (int) objects.get(0);
-        int canvasPosY   = (int) objects.get(1);
-        char[][] content = (char[][]) objects.get(2);
+        if(!objects.isEmpty()) {
 
-        for(int y = 0; y < content.length; y++) {
+            int canvasPosX   = (int) objects.get(0);
+            int canvasPosY   = (int) objects.get(1);
+            char[][] content = (char[][]) objects.get(2);
 
-            for(int x = 0; x < content[y].length; x++) {
+            for(int y = 0; y < content.length; y++) {
 
-                textGraphics.setCharacter(x + canvasPosX, y + canvasPosY, content[y][x]);
+                for(int x = 0; x < content[y].length; x++) {
 
+                    textGraphics.setCharacter(x + canvasPosX, y + canvasPosY, content[y][x]);
+
+                }
+            
             }
-        
+
         }
 
     }
