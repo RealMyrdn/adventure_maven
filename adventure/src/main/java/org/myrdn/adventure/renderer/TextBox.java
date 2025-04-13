@@ -5,12 +5,12 @@ import java.util.Arrays;
 
 public class TextBox {
 
+    private final ArrayList<String> window;
+    private final String title;
     private final int boxPosX;
     private final int boxPosY;
     private final int height;
     private final int width;
-    private final String title;
-    private final ArrayList<String> window;
 
     public TextBox(int boxPosX, int boxPosY, int width, int height, String text, String title) {
 

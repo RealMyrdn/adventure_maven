@@ -1,4 +1,4 @@
-package org.myrdn.adventure.gamecontroller;
+package org.myrdn.adventure.datahandler;
 
 import java.io.Serializable;
 

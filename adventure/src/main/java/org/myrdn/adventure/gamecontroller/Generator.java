@@ -4,18 +4,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import org.myrdn.adventure.datahandler.GameObject;
+import org.myrdn.adventure.datahandler.ItemObject;
+import org.myrdn.adventure.datahandler.Layout;
+import org.myrdn.adventure.datahandler.Room;
+
 public class Generator {
 
-    private static final int MAX_ATTEMPTS = 2000000;
     private static final Random RANDOM    = new Random();
+    private static final int MAX_ATTEMPTS = 2000000;
 
     private final Layout layoutObject;
-    private final int xSize;
-    private final int ySize;
     private final int[][] layout;
     private final Room[][] rooms;
-    
-    private int[] startPosition;
+    private final int xSize;
+    private final int ySize;
     
     public Generator(Layout layoutObject, ArrayList<GameObject> availableObjects, ArrayList<ItemObject> availableItems) {
 
@@ -44,12 +47,6 @@ public class Generator {
     public Room[][] getRooms() {
     
         return this.rooms;
-    
-    }
-
-    public int[] getStartPosition() {
-    
-        return this.startPosition;
     
     }
 

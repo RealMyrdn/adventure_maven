@@ -4,16 +4,18 @@ import java.util.ArrayList;
 
 public class TextBoxList {
 
+    private static volatile TextBoxList textBoxList;
+
     private final ArrayList<TextBox> instances;
 
-    private int canvasX;
-    private int canvasY;
+    private boolean canvasChanged;
     private int canvasWidth;
     private int canvasHeight;
-    private boolean canvasChanged;
     private char[][] canvas;
+    private int canvasX;
+    private int canvasY;
 
-    public TextBoxList() {
+    private TextBoxList() {
 
         this.instances     = new ArrayList<>();
         this.canvasX       = 0;
@@ -23,6 +25,22 @@ public class TextBoxList {
         this.canvasChanged = true;
         
 
+    }
+
+    public static TextBoxList createTextBoxList() {
+    
+        if(textBoxList == null) {
+    
+            synchronized (TextBoxList.class) {
+    
+                textBoxList = new TextBoxList();
+    
+            }
+    
+        }
+    
+        return textBoxList;
+    
     }
 
 
@@ -81,6 +99,7 @@ public class TextBoxList {
         renderObject.add(canvasY);
 
         if(canvasChanged) {
+
             for(TextBox instance : instances) {
                 
                 for(int i = instance.getBoxPosY(); i < instance.getHeight() + instance.getBoxPosY(); i++) {

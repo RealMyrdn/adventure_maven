@@ -2,26 +2,26 @@ package org.myrdn.adventure.renderer;
 
 import java.util.ArrayList;
 
-import org.myrdn.adventure.gamecontroller.Player;
-import org.myrdn.adventure.gamecontroller.Room;
+import org.myrdn.adventure.datahandler.Player;
+import org.myrdn.adventure.datahandler.Room;
 
-public class Map {
-
-    private static volatile Map map;
+public final class Map {
 
     private static final char HIDDEN = ' ';
     
-    private final Player player;
+    private static volatile Map map;
+    
     private final Room[][] rooms;
+    private final Player player;
     private final int mapSizeX;
     private final int mapSizeY;
     private final int mapPosX;
     private final int mapPosY;
 
-    private int playerPosX;
-    private int playerPosY;
     private char[][] previousMap;
     private boolean mapFound;
+    private int playerPosX;
+    private int playerPosY;
 
     private Map(int mapSizeX, int mapSizeY, Player player, Room[][] rooms, int mapPosX, int mapPosY) {
 
@@ -35,6 +35,7 @@ public class Map {
         this.playerPosY  = player.getY();
         this.previousMap = new char[this.mapSizeY][mapSizeX];
         this.mapFound    = false;
+        update();
     
     }
 
@@ -86,11 +87,11 @@ public class Map {
         borderedMap[newHeight - 1][0] = '╚';
         borderedMap[newHeight - 1][newWidth - 1] = '╝';
 
-        String title = "╡ Karte ╞";
+        String title = "╡ Haus ╞";
 
         int titleLength = title.length();
         int availableSpace = newWidth - 2;
-        int titleStart = (availableSpace - titleLength) / 2;
+        int titleStart = (availableSpace - titleLength) / 2 + 1;
     
         for(int x = 1; x < newWidth - 1; x++) {
 

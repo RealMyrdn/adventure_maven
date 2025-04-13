@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.myrdn.adventure.datahandler.DataHandler;
+import org.myrdn.adventure.datahandler.GameObject;
+import org.myrdn.adventure.datahandler.House;
+import org.myrdn.adventure.datahandler.ItemObject;
+import org.myrdn.adventure.datahandler.Layout;
+import org.myrdn.adventure.datahandler.Player;
 import org.myrdn.adventure.datahandler.SaveGame;
 import org.myrdn.adventure.renderer.Renderer;
 
@@ -18,31 +23,32 @@ public class Game {
     private static final int NORTH = 0b0100;
     private static final int EAST  = 0b1000;
 
-    private House house;
-    private Player player;
-    private Layout layout;
     private final Generator generator;
     private final SaveGame savegame;
+
+    private ArrayList<GameObject> objects = new ArrayList<>();
     private DataHandler datahandler = new DataHandler();
+    private GameObject activeObject = null;
     private Renderer renderer;
+    private Layout layout;
+    private Player player;
+    private House house;
     private int xPos;
     private int yPos;
-    private ArrayList<GameObject> objects = new ArrayList<>();
-    private GameObject activeObject = null;
 
     public Game(int xSize, int ySize, String name) throws IOException  {
 
         this.layout       = new Layout(xSize, ySize);
         this.generator    = new Generator(this.layout, datahandler.loadObjects(), datahandler.loadItems());
-        this.house        = new House(this.generator.getStartPosition(), this.generator.getRooms());
-        this.player       = new Player(name ,house.getStartPosition());
-        this.xPos         = this.player.getPosition()[1];
-        this.yPos         = this.player.getPosition()[0];
+        this.player       = new Player(name ,Layout.startPosX, Layout.startPosY);
+        this.house        = new House(this.generator.getRooms());
         this.savegame     = new SaveGame(this.player, this.house);
+        this.xPos         = Layout.startPosX;
+        this.yPos         = Layout.startPosY;
 
         try {
 
-            this.renderer = new Renderer(this.generator);
+            this.renderer = new Renderer(this.generator, this.player);
 
         } catch(IOException e) {
 
@@ -95,13 +101,12 @@ public class Game {
 
             while (isRunning && this.renderer.getScreen() != null) {
 
-                this.xPos         = this.player.getPosition()[1];
-                this.yPos         = this.player.getPosition()[0];
+                this.xPos = this.player.getX();
+                this.yPos = this.player.getY();
 
                 if(firstDraw) {
 
-                    this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
-                    this.renderer.printRoomDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo(), 20);
+                    this.renderer.printRoomDescription(this.house.getRoom(this.xPos, this.yPos).getRoomInfo(), 20);
                     this.renderer.printInputLine(keyStrokes);
                     this.renderer.renderFrame();
                     firstDraw = false;
@@ -137,8 +142,7 @@ public class Game {
                 executeInstructions(processKeyStrokes(keyStrokes));
                 keyStrokes.clear();
 
-                this.renderer.printMap(this.house.drawMap(), player.getPosition()[1], player.getPosition()[0]);
-                this.renderer.printRoomDescription(this.house.getRoom(player.getPosition()[1], player.getPosition()[0]).getRoomInfo(), 20);
+                this.renderer.printRoomDescription(this.house.getRoom(this.player.getX(), this.player.getY()).getRoomInfo(), 20);
                 this.renderer.printInputLine(keyStrokes);
                 this.renderer.renderFrame();
 
@@ -173,7 +177,7 @@ public class Game {
 
     public void executeInstructions(ArrayList<String> instructions) throws IOException {
 
-        int value = this.house.getRoom(this.player.getPosition()[1], this.player.getPosition()[0]).getRoomType();
+        int value = this.house.getRoom(this.player.getX(), this.player.getY()).getRoomType();
         System.out.println(value);
         
         switch (instructions.get(0)) {
@@ -275,7 +279,7 @@ public class Game {
 
             int newX = this.xPos + dx;
             int newY = this.yPos + dy;
-            this.player.setPosition(new int[] { newY, newX });
+            this.player.setPosition(newX, newY);
 
         }
 

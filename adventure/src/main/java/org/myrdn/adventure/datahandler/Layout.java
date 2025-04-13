@@ -1,4 +1,4 @@
-package org.myrdn.adventure.gamecontroller;
+package org.myrdn.adventure.datahandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,11 +15,13 @@ public class Layout {
     private static final int MAX_ROOM_ATTEMPTS = 10;
     private static final int DOOR_THRESHOLD    = 1;
     
+    static public int startPosY;
+    static public int startPosX;
+
+    private final int[][] layout;
     private final int xSize;
     private final int ySize;
-    private final int[][] layout;
     
-    private int[] startPosition;
     private int startTile;
     
     public Layout(int xSize, int ySize) {
@@ -64,12 +66,12 @@ public class Layout {
 
     private void generateStart() {
     
-        int yPos                = this.ySize - 1;
         int minX                = this.xSize / 4;
         int maxX                = minX + this.xSize / 2;
         int xPos                = minX + RANDOM.nextInt(maxX - minX);
-        int[] genPos            = {yPos, xPos};
-        this.startPosition      = genPos;
+        int yPos                = this.ySize - 1;
+        Layout.startPosX        = xPos;
+        Layout.startPosY        = yPos;
         this.layout[yPos][xPos] = this.startTile;
     
     }
@@ -143,7 +145,7 @@ public class Layout {
     
         boolean[][] visited = new boolean[ySize][xSize];
         int totalRooms = ySize * xSize;
-        int visitedRooms = depthFirstSearch(startPosition[0], startPosition[1], visited);
+        int visitedRooms = depthFirstSearch(startPosY, startPosX, visited);
     
         return visitedRooms == totalRooms;
     

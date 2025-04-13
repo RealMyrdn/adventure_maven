@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.myrdn.adventure.datahandler.ItemObject;
+import org.myrdn.adventure.datahandler.Player;
 import org.myrdn.adventure.gamecontroller.Generator;
-import org.myrdn.adventure.gamecontroller.ItemObject;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
@@ -25,22 +26,26 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 
 public class Renderer {
 
-    private final Generator generator;
-    private final Font myFont;
     private final SwingTerminalFontConfiguration myFontConfiguration;
+    private final PlayerStatus playerStatus;
+    private final TextBoxList textBoxList;
+    private final CommandLine commandLine;
+    private final Generator generator;
     private final int terminalX = 120;
     private final int terminalY = 40;
     private final TerminalSize size;
+    private final Font myFont;
+    private final Map map;
    
     protected final int xSize;
     protected final int ySize;
    
-    private Terminal terminal;
-    private Screen screen;
     private TextGraphics textGraphics;
+    private Terminal terminal;
     private boolean mapFound;
+    private Screen screen;
 
-    public Renderer(Generator generator) throws IOException {
+    public Renderer(Generator generator, Player player) throws IOException {
 
         this.generator           = generator;
         this.size                = new TerminalSize(terminalX, terminalY);
@@ -48,6 +53,10 @@ public class Renderer {
         this.myFontConfiguration = SwingTerminalFontConfiguration.newInstance(myFont);
         this.xSize               = this.generator.getXSize();
         this.ySize               = this.generator.getYSize();
+        this.map                 = Map.createMap(xSize, ySize, player, generator.getRooms(), 0, 0);
+        this.textBoxList         = TextBoxList.createTextBoxList();
+        this.commandLine         = CommandLine.createCommandLine();
+        this.playerStatus        = PlayerStatus.createPlayerStatus();
         this.mapFound            = false;
 
     }
@@ -101,12 +110,14 @@ public class Renderer {
     }
 
     public void initScreen() throws IOException {
+
+        System.setProperty("file.encoding", "UTF-8");
     
         DefaultTerminalFactory factory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(myFontConfiguration).setInitialTerminalSize(size);
 
         this.terminal = factory.createTerminal();
 
-        if (terminal instanceof SwingTerminalFrame swingTerminal) {
+        if(terminal instanceof SwingTerminalFrame swingTerminal) {
     
             swingTerminal.setResizable(false);
             swingTerminal.setTitle("🐱‍👤 Textadventure");
@@ -140,44 +151,32 @@ public class Renderer {
     }
     
     public void renderFrame() throws IOException {
-    
+
+        render(map.update());
+        render(playerStatus.update());
+        render(textBoxList.update());
+        render(commandLine.update());
+
         screen.refresh();
     
     }
 
-    public void printMap(String map, int playerX, int playerY) {
-    
-        String[] rows = map.split("\n");
-    
-        for (int i = 0; i < this.xSize + 2; i++) {
-    
-            putGreenBorder(i, 0);
-    
-        }
-    
-        for (int y = 0; y < rows.length; y++) {
-    
-            putGreenBorder(0, y + 1);
-            String[] cells = rows[y].split("");
-    
-            for (int x = 0; x < cells.length; x++) {
-    
-                putMazeTiles(x, y, cells, playerX, playerY);
-    
+    public void render(ArrayList<Object> objects) {
+
+        int canvasPosX   = (int) objects.get(0);
+        int canvasPosY   = (int) objects.get(1);
+        char[][] content = (char[][]) objects.get(2);
+
+        for(int y = 0; y < content.length; y++) {
+
+            for(int x = 0; x < content[y].length; x++) {
+
+                textGraphics.setCharacter(x + canvasPosX, y + canvasPosY, content[y][x]);
+
             }
-    
-            putGreenBorder(xSize + 1, y + 1);
-    
+        
         }
-    
-        for (int i = 0; i < this.xSize + 2; i++) {
-    
-            putGreenBorder(i, ySize + 1);
-    
-        }
-    
-        putMapTitle();
-    
+
     }
 
     public void renderTextBox(TextBox textBox) {
@@ -186,11 +185,11 @@ public class Renderer {
         int startY = textBox.getBoxPosY();
         ArrayList<String> window = textBox.getWindow();
     
-        for (int y = 0; y < window.size(); y++) {
+        for(int y = 0; y < window.size(); y++) {
             
             String line = window.get(y);
             
-            for (int x = 0; x < line.length(); x++) {
+            for(int x = 0; x < line.length(); x++) {
             
                 textGraphics.putString(startX + x, startY + y, String.valueOf(line.charAt(x)));
             
@@ -221,7 +220,7 @@ public class Renderer {
         this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
         this.textGraphics.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
     
-        if (mapFound || (x == playerX && y == playerY)) {
+        if(mapFound || (x == playerX && y == playerY)) {
     
             this.textGraphics.putString(x + 1, y + 1, cells[x]);
     
@@ -242,7 +241,7 @@ public class Renderer {
         clearTextField("BLACK", "CYAN_BRIGHT", height);
         String[] rows = description.split("\n");
     
-        for (int y = 0; y < rows.length; y++) {
+        for(int y = 0; y < rows.length; y++) {
     
             this.textGraphics.putString(40, height + y, rows[y]);
     
@@ -291,7 +290,7 @@ public class Renderer {
         String objectDescription = stringBuilder.toString();
         String[] rows = objectDescription.split("\n");
 
-        for (int y = 0; y < rows.length; y++) {
+        for(int y = 0; y < rows.length; y++) {
 
             this.textGraphics.putString(40, height + y, rows[y]);
 
@@ -304,7 +303,7 @@ public class Renderer {
         clearTextField("BLACK", "CYAN_BRIGHT", height);
         String[] rows = description.split("\n");
 
-        for (int y = 0; y < rows.length; y++) {
+        for(int y = 0; y < rows.length; y++) {
 
             this.textGraphics.putString(40, height + y, rows[y]);
 
@@ -317,7 +316,7 @@ public class Renderer {
         this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
         this.textGraphics.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
 
-        for (int i = 0; i < 40; i++) {
+        for(int i = 0; i < 40; i++) {
 
             this.textGraphics.putString(10 + i, 35, " ");
 
@@ -325,7 +324,7 @@ public class Renderer {
 
         int j = 0;
 
-        for (KeyStroke keyStroke : keyStrokes) {
+        for(KeyStroke keyStroke : keyStrokes) {
 
             this.textGraphics.putString(10 + j, 35, keyStroke.getCharacter().toString());
             j++;

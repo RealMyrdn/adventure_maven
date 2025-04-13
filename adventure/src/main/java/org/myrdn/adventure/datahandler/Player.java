@@ -1,25 +1,29 @@
-package org.myrdn.adventure.gamecontroller;
+package org.myrdn.adventure.datahandler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Player implements Serializable {
     
-    private final String name;
     private final ArrayList<Integer> inventory;
+    private final String name;
 
-    private int[] position;
-    private int[] previousPosition;
+    private int previousPosX;
+    private int previousPosY;
+    private int equippedItem;
+    private int playerPosX;
+    private int playerPosY;
     private int maxHealth;
     private int health;
     private int attack;
-    private int equippedItem;
 
-    public Player(String name, int[] position) {
+    public Player(String name, int PosX, int PosY) {
     
         this.name             = name;
-        this.position         = position;
-        this.previousPosition = this.position;
+        this.playerPosX       = PosX;
+        this.playerPosY       = PosY;
+        this.previousPosX     = 0;
+        this.previousPosY     = 0;
         this.maxHealth        = 10;
         this.health           = 10;
         this.attack           = 1;
@@ -34,28 +38,24 @@ public class Player implements Serializable {
     
     }
 
-    public int[] getPosition() {
-    
-        return this.position;
-    
-    }
-
     public int getX() {
     
-        return this.position[1];
+        return this.playerPosX;
     
     }
 
     public int getY() {
     
-        return this.position[0];
+        return this.playerPosY;
     
     } 
 
-    public void setPosition(int[] position) {
+    public void setPosition(int posX, int posY) {
     
-        this.previousPosition = this.position;
-        this.position = position;
+        this.previousPosX = this.playerPosX;
+        this.previousPosY = this.playerPosY;
+        this.playerPosX   = posX;
+        this.playerPosY   = posY;
     
     }
 
@@ -137,7 +137,7 @@ public class Player implements Serializable {
 
     public boolean hasMoved() {
 
-        return this.previousPosition != this.position;
+        return (this.previousPosX != this.playerPosX) || (this.previousPosY != this.playerPosY);
 
     }
 
