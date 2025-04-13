@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.myrdn.adventure.ItemObject;
+import org.myrdn.adventure.gamecontroller.Generator;
+import org.myrdn.adventure.gamecontroller.ItemObject;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
@@ -24,25 +25,29 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 
 public class Renderer {
 
+    private final Generator generator;
     private final Font myFont;
     private final SwingTerminalFontConfiguration myFontConfiguration;
     private final int terminalX = 120;
     private final int terminalY = 40;
+    private final TerminalSize size;
+   
+    protected final int xSize;
+    protected final int ySize;
+   
     private Terminal terminal;
     private Screen screen;
     private TextGraphics textGraphics;
-    private final TerminalSize size;
-    protected final int xSize;
-    protected final int ySize;
     private boolean mapFound;
 
-    public Renderer(int xSize, int ySize) throws IOException {
+    public Renderer(Generator generator) throws IOException {
 
+        this.generator           = generator;
         this.size                = new TerminalSize(terminalX, terminalY);
         this.myFont              = loadFontFromResources("/fonts/JetBrainsMono-Regular.ttf", 14f);
         this.myFontConfiguration = SwingTerminalFontConfiguration.newInstance(myFont);
-        this.xSize               = xSize;
-        this.ySize               = ySize;
+        this.xSize               = this.generator.getXSize();
+        this.ySize               = this.generator.getYSize();
         this.mapFound            = false;
 
     }
@@ -97,9 +102,7 @@ public class Renderer {
 
     public void initScreen() throws IOException {
     
-        DefaultTerminalFactory factory = new DefaultTerminalFactory()
-            .setTerminalEmulatorFontConfiguration(myFontConfiguration)
-            .setInitialTerminalSize(size);
+        DefaultTerminalFactory factory = new DefaultTerminalFactory().setTerminalEmulatorFontConfiguration(myFontConfiguration).setInitialTerminalSize(size);
 
         this.terminal = factory.createTerminal();
 
@@ -135,7 +138,7 @@ public class Renderer {
         this.screen.startScreen();
         this.textGraphics = screen.newTextGraphics();
     }
-
+    
     public void renderFrame() throws IOException {
     
         screen.refresh();
@@ -176,6 +179,27 @@ public class Renderer {
         putMapTitle();
     
     }
+
+    public void renderTextBox(TextBox textBox) {
+        
+        int startX = textBox.getBoxPosX();
+        int startY = textBox.getBoxPosY();
+        ArrayList<String> window = textBox.getWindow();
+    
+        for (int y = 0; y < window.size(); y++) {
+            
+            String line = window.get(y);
+            
+            for (int x = 0; x < line.length(); x++) {
+            
+                textGraphics.putString(startX + x, startY + y, String.valueOf(line.charAt(x)));
+            
+            }
+        
+        }
+    
+    }
+    
 
     public void putMapTitle() {
     
