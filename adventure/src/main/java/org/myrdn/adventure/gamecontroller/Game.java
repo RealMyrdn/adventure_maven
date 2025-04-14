@@ -106,7 +106,7 @@ public class Game {
             this.xPos = this.player.getX();
             this.yPos = this.player.getY();
             
-            this.renderer.getTextBoxList().addTextBox(40, 15, 40, 10, this.house.getRoom(xPos, yPos).getRoomInfo(), "Info");
+            this.renderer.getTextBoxList().addTextBox(40, 15, 40, 10, this.house.getRoom(xPos, yPos).getRoomInfo(), "Erster Eindruck");
             this.renderer.renderFrame();
 
             while (isRunning && this.renderer.getScreen() != null) {
@@ -237,7 +237,7 @@ public class Game {
 
         if("raum".equals(target)) {
         
-            renderer.getTextBoxList().addTextBox(25, 13, 30, 10, room.getRoomObjects(), "Info");
+            renderer.getTextBoxList().addTextBox(25, 13, 30, 10, room.getRoomObjects(), "Entdeckungen");
             renderer.renderFrame();
         
             return;
@@ -246,20 +246,19 @@ public class Game {
         for(GameObject object : room.getObjects()) {
            
             if(object.getName().equalsIgnoreCase(target)) {
-                
-                activeObject = object;
-                renderer.printObjectDescription(object.getDescription(), object.getHiddenItems(), 10);
-                renderer.renderFrame();
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                stringBuilder.append(object.getDescription()).append("\n");
 
                 for(ItemObject item : object.getHiddenItems()) {
                     
-                    if(item.getName().equalsIgnoreCase(target)) {
-                      
-                        // renderer.printItemDescription(item.getDescription(), 25);
-                    
-                    }
+                    stringBuilder.append(item.getName()).append("\n");
                 
                 }
+                
+                renderer.getTextBoxList().addTextBox(5, 5, 30, 15, stringBuilder.toString(), "Fund");
+                renderer.renderFrame();
 
                 break;
             
@@ -294,7 +293,7 @@ public class Game {
             this.yPos = this.player.getY();
             
             this.renderer.getTextBoxList().clearList();
-            this.renderer.getTextBoxList().addTextBox(40, 15, 40, 10, this.house.getRoom(xPos, yPos).getRoomInfo(), "Info");
+            this.renderer.getTextBoxList().addTextBox(40, 15, 40, 10, this.house.getRoom(xPos, yPos).getRoomInfo(), "Erster Eindruck");
             
             try {
             

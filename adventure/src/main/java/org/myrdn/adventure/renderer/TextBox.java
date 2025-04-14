@@ -107,9 +107,13 @@ public class TextBox {
     private ArrayList<String> addBorder(ArrayList<String> formattedText) {
 
         ArrayList<String> builtWindow = new ArrayList<>();
-        int titleStart = ((this.width / 2) - (title.length() / 2)) - 2;
+
+        int titleLength = title.length();
+        int totalPadding = this.width - (6 + titleLength);
+        int leftPadding = totalPadding / 2;
+        int rightPadding = totalPadding - leftPadding;
     
-        String topBorder = String.format("╔%s╡ %s ╞%s╗", "═".repeat(titleStart - 1), title, "═".repeat(this.width / 2 - title.length() - 1));
+        String topBorder = String.format("╔%s╡ %s ╞%s╗", "═".repeat(Math.max(0, leftPadding)), title, "═".repeat(Math.max(0, rightPadding)));
         builtWindow.add(topBorder);
     
         String emptyLine = String.format("║%s║", " ".repeat(this.width - 2));

@@ -34,6 +34,7 @@ public class Renderer {
     private final int terminalX = 120;
     private final int terminalY = 40;
     private final TerminalSize size;
+    private final Player player;
     private final Font myFont;
     private final Map map;
    
@@ -42,7 +43,6 @@ public class Renderer {
    
     private TextGraphics textGraphics;
     private Terminal terminal;
-    private boolean mapFound;
     private Screen screen;
 
     public Renderer(Generator generator, Player player) throws IOException {
@@ -53,11 +53,11 @@ public class Renderer {
         this.myFontConfiguration = SwingTerminalFontConfiguration.newInstance(myFont);
         this.xSize               = this.generator.getXSize();
         this.ySize               = this.generator.getYSize();
-        this.map                 = Map.createMap(xSize, ySize, player, generator.getRooms(), 0, 0);
+        this.map                 = Map.createMap(xSize, ySize, player, generator.getRooms(), 1, 1);
         this.textBoxList         = TextBoxList.createTextBoxList();
         this.commandLine         = CommandLine.createCommandLine();
-        this.playerStatus        = PlayerStatus.createPlayerStatus();
-        this.mapFound            = false;
+        this.player              = player;
+        this.playerStatus        = PlayerStatus.createPlayerStatus(this.player);
 
     }
 
@@ -83,12 +83,6 @@ public class Renderer {
 
         return this.textBoxList;
         
-    }
-
-    public void setMapFound(boolean mapFound) {
-    
-        this.mapFound = mapFound;
-    
     }
 
     private Font loadFontFromResources(String path, float size) {
@@ -230,19 +224,6 @@ public class Renderer {
         this.textGraphics.setForegroundColor(TextColor.ANSI.YELLOW);
         this.textGraphics.setBackgroundColor(TextColor.ANSI.YELLOW);
         this.textGraphics.putString(x, y, " ");
-    
-    }
-
-    public void putMazeTiles(int x, int y, String[] cells, int playerX, int playerY) {
-    
-        this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
-        this.textGraphics.setForegroundColor(TextColor.ANSI.BLUE_BRIGHT);
-    
-        if(mapFound || (x == playerX && y == playerY)) {
-    
-            this.textGraphics.putString(x + 1, y + 1, cells[x]);
-    
-        }
     
     }
     

@@ -1,6 +1,7 @@
 package org.myrdn.adventure.renderer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TextBoxList {
 
@@ -97,8 +98,8 @@ public class TextBoxList {
 
         if(!instances.isEmpty()) {
             
-            canvasX      = instances.stream().mapToInt(TextBox::getBoxPosX).min().orElseThrow();
-            canvasY      = instances.stream().mapToInt(TextBox::getBoxPosY).min().orElseThrow();
+            canvasX      = instances.stream().mapToInt(TextBox::getBoxPosX).min().orElse(0);
+            canvasY      = instances.stream().mapToInt(TextBox::getBoxPosY).min().orElse(0);
             canvasWidth  = instances.stream().mapToInt(TextBox::getMaxX).max().orElse(0) - canvasX;
             canvasHeight = instances.stream().mapToInt(TextBox::getMaxY).max().orElse(0) - canvasY;
         
@@ -115,44 +116,39 @@ public class TextBoxList {
     
     public ArrayList<Object> update() {
 
-        ArrayList<Object> renderObject = new ArrayList<>();
-        char[][] newCanvas = new char[canvasHeight][canvasWidth];
+    ArrayList<Object> renderObject = new ArrayList<>();
+    char[][] newCanvas             = new char[canvasHeight][canvasWidth];
 
-        renderObject.add(canvasX);
-        renderObject.add(canvasY);
+    renderObject.add(canvasX);
+    renderObject.add(canvasY);
 
-        if(canvasChanged) {
+    if(canvasChanged) {
 
-            for(TextBox instance : instances) {
+        for(TextBox instance : instances) {
 
-                int y = 0;
-                
-                for(int i = instance.getBoxPosY() - canvasY; i < instance.getHeight() + instance.getBoxPosY() - canvasY; i++) {
-                
-                    int x = 0;
-                
-                    for(int j = instance.getBoxPosX() - canvasX; j < instance.getWidth() + instance.getBoxPosX() - canvasX; j++) {
-                    
-                        newCanvas[i][j] = instance.getWindow().get(y).charAt(x);
+            List<String> window = instance.getWindow();
+            int startY          = instance.getBoxPosY() - canvasY;
+            int startX          = instance.getBoxPosX() - canvasX;
 
-                        x++;
-                
-                    }
-                
-                    y++;
+            for(int row = 0; row < instance.getHeight(); row++) {
+               
+                for(int col = 0; col < instance.getWidth(); col++) {
+                   
+                    newCanvas[startY + row][startX + col] = window.get(row).charAt(col);
                 
                 }
-                
+            
             }
         
-            this.canvas = newCanvas;
-            this.canvasChanged = false;
-
         }
 
-        renderObject.add(this.canvas);
+        this.canvas = newCanvas;
+        this.canvasChanged = false;
+    
+    }
 
-        return renderObject;
+    renderObject.add(this.canvas);
+    return renderObject;
 
     }
 
