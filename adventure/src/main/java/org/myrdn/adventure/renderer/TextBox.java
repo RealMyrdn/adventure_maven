@@ -80,7 +80,7 @@ public class TextBox {
 
         for(String word : textList) {
             
-            if(charCounter + word.length() < width -4 && !word.equals("\n")) {
+            if(charCounter + word.length() < this.width -4 && !word.equals("\n")) {
             
                 stringBuilder.append(word).append(" ");
                 charCounter += word.length() + 1;
@@ -90,12 +90,15 @@ public class TextBox {
                 formatText.add(stringBuilder.toString());
                 stringBuilder.setLength(0);
                 charCounter = 0;
-                charCounter += word.length();
                 stringBuilder.append(word).append(" ");
+                charCounter += word.length() + 1;
             
             }
 
         }
+
+        formatText.add(stringBuilder.toString());
+        System.out.println(stringBuilder.toString());
 
         return formatText;
 
@@ -104,22 +107,31 @@ public class TextBox {
     private ArrayList<String> addBorder(ArrayList<String> formattedText) {
 
         ArrayList<String> builtWindow = new ArrayList<>();
-        int titleStart = (this.width - title.length()) / 2 - 4;
+        int titleStart = ((this.width / 2) - (title.length() / 2)) - 2;
     
-        String topBorder = String.format("╔%s╡ %s ╞%s╗", "═".repeat(titleStart - 1), title, "═".repeat(this.width - titleStart - title.length() - 7));
+        String topBorder = String.format("╔%s╡ %s ╞%s╗", "═".repeat(titleStart - 1), title, "═".repeat(this.width / 2 - title.length() - 1));
         builtWindow.add(topBorder);
     
         String emptyLine = String.format("║%s║", " ".repeat(this.width - 2));
         builtWindow.add(emptyLine);
         
-        if(formattedText != null) {
+        if(formattedText != null && !formattedText.isEmpty()) {
             
-            for (int i = 0; i < this.height - 4; i++) {
+            for (int i = 0; i < this.height - 3; i++) {
                 
-                if(formattedText.get(i) != null) {
+                if(i < formattedText.size()) {
+
+                    if(this.width - formattedText.get(i).length() - 4 >= 0) {
+                        
+                        String textLine = String.format("║ %s%s ║", formattedText.get(i), " ".repeat(this.width - formattedText.get(i).length() - 4));
+                        builtWindow.add(textLine);
                     
-                    String textLine = String.format("║ %s%s ║", formattedText.get(i), " ".repeat(this.width - formattedText.get(i).length() - 4));
-                    builtWindow.add(textLine);
+                    } else {
+                    
+                        emptyLine = String.format("║%s║", " ".repeat(this.width - 2));
+                        builtWindow.add(emptyLine);
+                    
+                    }
                 
                 } else {
                     
@@ -132,7 +144,7 @@ public class TextBox {
 
         }
     
-        String bottomBorder = String.format("╚%s╝", "═".repeat(this.width - 1));
+        String bottomBorder = String.format("╚%s╝", "═".repeat(this.width - 2));
         builtWindow.add(bottomBorder);
     
         return builtWindow;

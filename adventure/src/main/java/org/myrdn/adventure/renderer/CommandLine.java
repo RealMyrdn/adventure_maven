@@ -8,11 +8,15 @@ public class CommandLine {
 
     private static volatile CommandLine commandLine;
 
-    private final ArrayList<KeyStroke> keystrokes;
+    private final ArrayList<Character> keyStrokes;
+    private final int posX;
+    private final int posY;
 
     private CommandLine() {
 
-        this.keystrokes = new ArrayList<>();
+        this.keyStrokes = new ArrayList<>();
+        this.posX       = 2;
+        this.posY       = 37;
 
     }
 
@@ -32,22 +36,62 @@ public class CommandLine {
     
     }
 
-    public ArrayList<KeyStroke> getKeyStrokes() {
+    public void addKeyStroke(KeyStroke keyStroke) {
 
-        return this.keystrokes;
+        Character newChar = keyStroke.getCharacter();
+
+        if (newChar != null && !Character.isISOControl(newChar)) {
+
+            this.keyStrokes.add(newChar);
+
+        }
+        
+    }
+
+    public void removeLast() {
+        
+        if(keyStrokes.size() >= 1) {
+            
+            this.keyStrokes.removeLast();
+        
+        } else {
+
+            this.keyStrokes.clear();
+
+        }
 
     }
 
-    public void addKeyStroke(KeyStroke keyStroke) {
+    public void resetKeyStrokes() {
 
-        this.keystrokes.add(keyStroke);
-        
+        this.keyStrokes.clear();
+
     }
 
 
     public ArrayList<Object> update() {
 
         ArrayList<Object> renderObject = new ArrayList<>();
+
+        char[][] characters = new char[1][80];
+
+        if(!keyStrokes.isEmpty()) {
+
+            for(int i = 0; i < keyStrokes.size(); i++) {
+                
+                characters[0][i] = keyStrokes.get(i);
+            
+            }
+
+        } else {
+
+            characters[0][0] = ' ';
+        
+        }
+
+        renderObject.add(this.posX);
+        renderObject.add(this.posY);
+        renderObject.add(characters);
 
         return renderObject;
 

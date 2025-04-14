@@ -10,7 +10,9 @@ import org.myrdn.adventure.datahandler.House;
 import org.myrdn.adventure.datahandler.ItemObject;
 import org.myrdn.adventure.datahandler.Layout;
 import org.myrdn.adventure.datahandler.Player;
+import org.myrdn.adventure.datahandler.Room;
 import org.myrdn.adventure.datahandler.SaveGame;
+import org.myrdn.adventure.renderer.CommandLine;
 import org.myrdn.adventure.renderer.Renderer;
 
 import com.googlecode.lanterna.input.KeyStroke;
@@ -23,6 +25,7 @@ public class Game {
     private static final int NORTH = 0b0100;
     private static final int EAST  = 0b1000;
 
+    private final CommandLine commandLine;
     private final Generator generator;
     private final SaveGame savegame;
 
@@ -56,6 +59,8 @@ public class Game {
             System.out.println(e);
 
         }
+
+        this.commandLine = CommandLine.createCommandLine();
         
     }
 
@@ -91,7 +96,6 @@ public class Game {
     public void loop() {
 
         boolean isRunning = true;
-        boolean firstDraw = true;
 
         try {
 
@@ -99,54 +103,49 @@ public class Game {
             KeyType keyType;
             ArrayList<KeyStroke> keyStrokes = new ArrayList<>();
 
+            this.xPos = this.player.getX();
+            this.yPos = this.player.getY();
+            
+            this.renderer.getTextBoxList().addTextBox(40, 15, 40, 10, this.house.getRoom(xPos, yPos).getRoomInfo(), "Info");
+            this.renderer.renderFrame();
+
             while (isRunning && this.renderer.getScreen() != null) {
 
                 this.xPos = this.player.getX();
                 this.yPos = this.player.getY();
+                
+                this.renderer.getTextGraphics().fill(' ');
 
-                if(firstDraw) {
+                keyStroke = this.renderer.getTerminal().readInput();
+                keyType = keyStroke.getKeyType();
+                                
+                if (keyStrokes.size() < 80 && keyType == KeyType.Character) {
+                
+                    commandLine.addKeyStroke(keyStroke);
+                    keyStrokes.add(keyStroke);
+                
+                } else if (!keyStrokes.isEmpty() && keyType == KeyType.Backspace) {
+                
+                    commandLine.removeLast();
+                    keyStrokes.removeLast();
+                
+                } else if (!keyStrokes.isEmpty() && keyType == KeyType.Enter) {
 
-                    this.renderer.printRoomDescription(this.house.getRoom(this.xPos, this.yPos).getRoomInfo(), 20);
-                    this.renderer.printInputLine(keyStrokes);
-                    this.renderer.renderFrame();
-                    firstDraw = false;
+                    executeInstructions(processKeyStrokes(keyStrokes));
+                    commandLine.resetKeyStrokes();
+                    keyStrokes.clear();
 
-                }
+                } else if(keyType == KeyType.Escape && this.renderer.getTextBoxList().getSize() > 0) {
 
-                while (true) {
-
-                    keyStroke = this.renderer.getTerminal().readInput();
-                    keyType = keyStroke.getKeyType();
-
-                    if (keyType == KeyType.Enter) {
-
-                        break;
-
-                    }
-
-                    if (keyStrokes.size() < 40 && keyType == KeyType.Character) {
-
-                        keyStrokes.add(keyStroke);
-
-                    } else if (!keyStrokes.isEmpty() && keyType == KeyType.Backspace) {
-
-                        keyStrokes.removeLast();
-
-                    }
-
-                    this.renderer.printInputLine(keyStrokes);
-                    this.renderer.renderFrame();
+                    this.renderer.getTextBoxList().removeLast();
 
                 }
 
-                executeInstructions(processKeyStrokes(keyStrokes));
-                keyStrokes.clear();
-
-                this.renderer.printRoomDescription(this.house.getRoom(this.player.getX(), this.player.getY()).getRoomInfo(), 20);
-                this.renderer.printInputLine(keyStrokes);
                 this.renderer.renderFrame();
 
             }
+
+            System.exit(0);
 
         } catch (IOException e) {
 
@@ -176,110 +175,136 @@ public class Game {
     }
 
     public void executeInstructions(ArrayList<String> instructions) throws IOException {
-
-        int value = this.house.getRoom(this.player.getX(), this.player.getY()).getRoomType();
-        System.out.println(value);
         
-        switch (instructions.get(0)) {
+        if(instructions == null || instructions.isEmpty()) return;
 
-            case "exit" -> {   
+        String command = instructions.get(0).toLowerCase();
+        Room currentRoom = house.getRoom(player.getX(), player.getY());
+        int roomType = currentRoom.getRoomType();
 
-                try {
+        switch(command) {
 
-                    datahandler.saveGame(savegame);
-
-                } catch (IOException e) {
-
-                    System.out.println(e);
-                }
-
-                System.exit(0);
-
-            }
-
-            case "gehe" -> {
-
-                switch(instructions.get(1)) {
-
-                    case "süd"  -> move(0, 1, SOUTH, value);
-                    case "west" -> move(  -1, 0,  WEST, value);
-                    case "nord" -> move(0,   -1, NORTH, value);
-                    case "ost"  -> move(1, 0,  EAST, value);
-
-                }
-
-            }
-
-            case "untersuche" -> {
-
-                switch(instructions.get(1)) {
-
-                    case "raum" -> {
-
-                        this.renderer.printDescription(this.house.getRoom(xPos, yPos).getRoomObjects(), 5);
-                        this.renderer.renderFrame();
-
-                    }
-
-                    default -> {
-
-                        objects = this.house.getRoom(xPos, yPos).getObjects();
-
-                        for(GameObject object : objects) {
-
-                            if(object.getName().toLowerCase().equals(instructions.get(1))) {
-
-                                this.activeObject = object;
-                                this.renderer.printObjectDescription(object.getDescription(), object.getHiddenItems(), 10);
-                                this.renderer.renderFrame();
-
-                            }
-
-                        }
-
-                        if(activeObject != null) {
-
-                            for(ItemObject item : activeObject.getHiddenItems()) {
-
-                                if(item.getName().toLowerCase().equals(instructions.get(1))) {
-
-                                    // this.renderer.printItemDescription(item.getDescription(), 25);
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-            case "nimm" -> {
-
-            }
-
-            case "inventar" -> {
-
-            }
-
-            case "benutze" -> {
-                
-            }
+            case "exit" -> handleExit();
+            case "gehe" -> handleMovement(instructions, roomType);
+            case "untersuche" -> handleExamine(instructions);
+            case "nimm" -> handleTake(instructions);
+            case "inventar" -> handleInventory();
+            case "benutze" -> handleUse(instructions);
+            case "render" -> this.renderer.renderFrame();
 
         }
+    }
 
+    private void handleExit() {
+
+        try {
+
+            datahandler.saveGame(savegame);
+        
+        } catch (IOException e) {
+        
+            System.out.println(e);
+        
+        }
+        
+        System.exit(0);
+    
+    }
+
+    private void handleMovement(ArrayList<String> instructions, int roomType) {
+    
+        if(instructions.size() < 2) return;
+        
+        String direction = instructions.get(1).toLowerCase();
+
+        switch(direction) {
+    
+            case "süd" -> move(0, 1, SOUTH, roomType);
+            case "west" -> move(-1, 0, WEST, roomType);
+            case "nord" -> move(0, -1, NORTH, roomType);
+            case "ost" -> move(1, 0, EAST, roomType);
+    
+        }
+    
+    }
+
+    private void handleExamine(ArrayList<String> instructions) throws IOException {
+    
+        if(instructions.size() < 2) return;
+        
+        String target = instructions.get(1).toLowerCase();
+        Room room = house.getRoom(xPos, yPos);
+
+        if("raum".equals(target)) {
+        
+            renderer.getTextBoxList().addTextBox(25, 13, 30, 10, room.getRoomObjects(), "Info");
+            renderer.renderFrame();
+        
+            return;
+        }
+
+        for(GameObject object : room.getObjects()) {
+           
+            if(object.getName().equalsIgnoreCase(target)) {
+                
+                activeObject = object;
+                renderer.printObjectDescription(object.getDescription(), object.getHiddenItems(), 10);
+                renderer.renderFrame();
+
+                for(ItemObject item : object.getHiddenItems()) {
+                    
+                    if(item.getName().equalsIgnoreCase(target)) {
+                      
+                        // renderer.printItemDescription(item.getDescription(), 25);
+                    
+                    }
+                
+                }
+
+                break;
+            
+            }
+        
+        }
+    
+    }
+
+    private void handleTake(ArrayList<String> instructions) {
+    
+    }
+
+    private void handleInventory() {
+    
+    }
+
+    private void handleUse(ArrayList<String> instructions) {
+      
     }
 
     private void move(int dx, int dy, int directionBit, int value) {
 
-        if ((value & directionBit) != 0 && this.yPos + dy < layout.getYSize()) {
+        if((value & directionBit) != 0 && this.yPos + dy < layout.getYSize()) {
 
             int newX = this.xPos + dx;
             int newY = this.yPos + dy;
+
             this.player.setPosition(newX, newY);
+            
+            this.xPos = this.player.getX();
+            this.yPos = this.player.getY();
+            
+            this.renderer.getTextBoxList().clearList();
+            this.renderer.getTextBoxList().addTextBox(40, 15, 40, 10, this.house.getRoom(xPos, yPos).getRoomInfo(), "Info");
+            
+            try {
+            
+                this.renderer.renderFrame();
+            
+            } catch(IOException e) {
+            
+                System.out.println(e);
+            
+            }
 
         }
 

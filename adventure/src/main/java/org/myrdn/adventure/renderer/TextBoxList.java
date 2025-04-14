@@ -43,11 +43,17 @@ public class TextBoxList {
     
     }
 
+    public int getSize() {
+
+        return this.instances.size();
+
+    }
+
 
     public void addTextBox(int boxPosX, int boxPosY, int width, int height, String text, String title) {
 
         TextBox textBox = new TextBox(boxPosX, boxPosY, width, height, text, title);
-        instances.add(textBox);
+        instances.addLast(textBox);
         calculateCanvas();
 
         this.canvasChanged = true;
@@ -81,19 +87,36 @@ public class TextBoxList {
 
     }
 
+    public void clearList() {
+
+        this.instances.clear();
+
+    }
+
     public void calculateCanvas() {
 
-        canvasX      = instances.stream().mapToInt(TextBox::getBoxPosX).min().orElseThrow();
-        canvasY      = instances.stream().mapToInt(TextBox::getBoxPosY).min().orElseThrow();
-        canvasWidth  = instances.stream().mapToInt(TextBox::getMaxX).max().orElse(0) - canvasX;
-        canvasHeight = instances.stream().mapToInt(TextBox::getMaxY).max().orElse(0) - canvasY;
+        if(!instances.isEmpty()) {
+            
+            canvasX      = instances.stream().mapToInt(TextBox::getBoxPosX).min().orElseThrow();
+            canvasY      = instances.stream().mapToInt(TextBox::getBoxPosY).min().orElseThrow();
+            canvasWidth  = instances.stream().mapToInt(TextBox::getMaxX).max().orElse(0) - canvasX;
+            canvasHeight = instances.stream().mapToInt(TextBox::getMaxY).max().orElse(0) - canvasY;
+        
+        } else {
+
+            canvasX      = 0;
+            canvasY      = 0;
+            canvasWidth  = 0;
+            canvasHeight = 0;
+
+        }
 
     }
     
     public ArrayList<Object> update() {
 
         ArrayList<Object> renderObject = new ArrayList<>();
-        char[][] result = new char[canvasHeight][canvasWidth];
+        char[][] newCanvas = new char[canvasHeight][canvasWidth];
 
         renderObject.add(canvasX);
         renderObject.add(canvasY);
@@ -101,20 +124,28 @@ public class TextBoxList {
         if(canvasChanged) {
 
             for(TextBox instance : instances) {
+
+                int y = 0;
                 
-                for(int i = instance.getBoxPosY(); i < instance.getHeight() + instance.getBoxPosY(); i++) {
+                for(int i = instance.getBoxPosY() - canvasY; i < instance.getHeight() + instance.getBoxPosY() - canvasY; i++) {
                 
-                    for(int j = instance.getBoxPosX(); j < instance.getWidth() + instance.getBoxPosX(); j++) {
+                    int x = 0;
+                
+                    for(int j = instance.getBoxPosX() - canvasX; j < instance.getWidth() + instance.getBoxPosX() - canvasX; j++) {
                     
-                        result[i][j] = instance.getWindow().get(i).charAt(j);
-                    
+                        newCanvas[i][j] = instance.getWindow().get(y).charAt(x);
+
+                        x++;
+                
                     }
+                
+                    y++;
                 
                 }
                 
             }
         
-            this.canvas = result;
+            this.canvas = newCanvas;
             this.canvasChanged = false;
 
         }

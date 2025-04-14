@@ -14,9 +14,9 @@ import org.myrdn.adventure.gamecontroller.Generator;
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
+import static com.googlecode.lanterna.TerminalTextUtils.isControlCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -77,6 +77,12 @@ public class Renderer {
     
         return this.textGraphics;
     
+    }
+
+    public TextBoxList getTextBoxList() {
+
+        return this.textBoxList;
+        
     }
 
     public void setMapFound(boolean mapFound) {
@@ -163,7 +169,7 @@ public class Renderer {
 
     public void render(ArrayList<Object> objects) {
 
-        if(!objects.isEmpty()) {
+        if(objects != null && !objects.isEmpty()) {
 
             int canvasPosX   = (int) objects.get(0);
             int canvasPosY   = (int) objects.get(1);
@@ -172,9 +178,17 @@ public class Renderer {
             for(int y = 0; y < content.length; y++) {
 
                 for(int x = 0; x < content[y].length; x++) {
+            
+                    if(content[y][x] != '\u0000' && !isControlCharacter(content[y][x])) {
+                    
+                        textGraphics.setCharacter(x + canvasPosX, y + canvasPosY, content[y][x]);
+                    
+                    } else {
 
-                    textGraphics.setCharacter(x + canvasPosX, y + canvasPosY, content[y][x]);
+                        textGraphics.setCharacter(x + canvasPosX, y + canvasPosY, ' ');
 
+                    }
+                
                 }
             
             }
@@ -315,25 +329,4 @@ public class Renderer {
 
     }
 
-    public void printInputLine(ArrayList<KeyStroke> keyStrokes) {
-
-        this.textGraphics.setBackgroundColor(TextColor.ANSI.BLACK);
-        this.textGraphics.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-
-        for(int i = 0; i < 40; i++) {
-
-            this.textGraphics.putString(10 + i, 35, " ");
-
-        }
-
-        int j = 0;
-
-        for(KeyStroke keyStroke : keyStrokes) {
-
-            this.textGraphics.putString(10 + j, 35, keyStroke.getCharacter().toString());
-            j++;
-
-        }
-
-    }
 }
