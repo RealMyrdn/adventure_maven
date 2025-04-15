@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.Random;
 
 public class Room implements Serializable {
+    
     private final int roomType;
-    private final ArrayList<GameObject> objects;
     private final String roomInfo;
+    private final ArrayList<GameObject> objects;
+    
     private static final Random RANDOM = new Random();
     
     public Room(int roomType, ArrayList<GameObject> availableObjects) {
@@ -41,8 +43,10 @@ public class Room implements Serializable {
     
         StringBuilder stringbuilder = new StringBuilder();
         int doors = Integer.bitCount(roomType);
+
         checkExits(doors, stringbuilder);
         checkObjects(stringbuilder);
+        
         return stringbuilder.toString();
     
     }
@@ -66,23 +70,37 @@ public class Room implements Serializable {
     public String getRoomObjects() {
 
         StringBuilder stringbuilder = new StringBuilder();
+    
         if(!this.objects.isEmpty()) {
+    
             stringbuilder.append("In diesem Raum sind folgende Objekte: \n");
+    
         } else {
+    
             stringbuilder.append("In diesem Raum ist nichts von Interesse.");
+    
         }
+    
         for(GameObject object : this.objects) {
+    
             stringbuilder.append(object.getName()).append("\n");
+    
         }
+        
         return stringbuilder.toString();
+    
     }
 
     private void checkExits(int doors, StringBuilder stringbuilder) {
 
         if(doors > 1) {
+
             stringbuilder.append("Dieser Raum hat ").append(doors).append(" Ausgänge.\n");
+        
         } else {
+        
             stringbuilder.append("Dieser Raum hat einen Ausgang.\n");
+        
         }
 
     }

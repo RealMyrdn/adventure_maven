@@ -2,7 +2,6 @@ package org.myrdn.adventure.gamecontroller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.myrdn.adventure.datahandler.DataHandler;
 import org.myrdn.adventure.datahandler.GameObject;
@@ -26,10 +25,10 @@ public class Game {
     private static final int EAST  = 0b1000;
 
     private final CommandLine commandLine;
+    private final InputParser inputParser;
     private final Generator generator;
     private final SaveGame savegame;
 
-    private ArrayList<GameObject> objects = new ArrayList<>();
     private DataHandler datahandler = new DataHandler();
     private GameObject activeObject = null;
     private Renderer renderer;
@@ -45,6 +44,7 @@ public class Game {
         this.generator    = new Generator(this.layout, datahandler.loadObjects(), datahandler.loadItems());
         this.player       = new Player(name ,Layout.startPosX, Layout.startPosY);
         this.house        = new House(this.generator.getRooms());
+        this.inputParser  = new InputParser();
         this.savegame     = new SaveGame(this.player, this.house);
         this.xPos         = Layout.startPosX;
         this.yPos         = Layout.startPosY;
@@ -131,7 +131,7 @@ public class Game {
                 
                 } else if (!keyStrokes.isEmpty() && keyType == KeyType.Enter) {
 
-                    executeInstructions(processKeyStrokes(keyStrokes));
+                    executeInstructions(inputParser.processKeyStrokes(keyStrokes));
                     commandLine.resetKeyStrokes();
                     keyStrokes.clear();
 
@@ -153,24 +153,6 @@ public class Game {
             System.out.println(e);
 
         }
-
-    }
-
-    public ArrayList<String> processKeyStrokes(ArrayList<KeyStroke> keyStrokes) throws IOException {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        ArrayList<String> instructions = new ArrayList<>();
-
-        for(KeyStroke keyStroke : keyStrokes) {
-
-            stringBuilder.append(keyStroke.getCharacter().toString());
-
-        }
-
-        String[] commands = stringBuilder.toString().toLowerCase().split(" ", 2);
-        instructions.addAll(Arrays.asList(commands));
-
-        return instructions;
 
     }
 
@@ -237,7 +219,7 @@ public class Game {
 
         if("raum".equals(target)) {
         
-            renderer.getTextBoxList().addTextBox(25, 13, 30, 10, room.getRoomObjects(), "Entdeckungen");
+            renderer.getTextBoxList().addTextBox(25, 13, 45, 10, room.getRoomObjects(), "Entdeckungen");
             renderer.renderFrame();
         
             return;
@@ -257,8 +239,10 @@ public class Game {
                 
                 }
                 
-                renderer.getTextBoxList().addTextBox(5, 5, 30, 15, stringBuilder.toString(), "Fund");
+                renderer.getTextBoxList().addTextBox(65, 12, 45, 15, stringBuilder.toString(), "Fund");
                 renderer.renderFrame();
+
+                activeObject = object;
 
                 break;
             
@@ -269,14 +253,49 @@ public class Game {
     }
 
     private void handleTake(ArrayList<String> instructions) {
+
+        if(instructions.size() >= 2 && this.activeObject != null) {
+
+            for(ItemObject item : activeObject.getHiddenItems()) {
+
+                if(item.getName().toLowerCase().equals(instructions.get(1).toLowerCase())) {
+
+                    player.addItemInv(item);
+                    activeObject.removeHiddenItem(item);
+                    
+                    break;
+
+                }
+
+            }
+
+        }
     
     }
 
     private void handleInventory() {
     
+        renderer.getTextBoxList().addTextBox(20, 10, 30, 10, player.getIventoryAsList(), "Inventar");
+        
+        try {
+         
+            renderer.renderFrame();
+        
+        } catch(IOException e) {
+
+            System.out.println(e);
+
+        }
+
     }
 
     private void handleUse(ArrayList<String> instructions) {
+
+        if(instructions != null) {
+
+            
+
+        }
       
     }
 

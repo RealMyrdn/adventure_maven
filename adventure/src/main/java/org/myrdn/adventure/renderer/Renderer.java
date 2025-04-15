@@ -49,7 +49,7 @@ public class Renderer {
 
         this.generator           = generator;
         this.size                = new TerminalSize(terminalX, terminalY);
-        this.myFont              = loadFontFromResources("/fonts/JetBrainsMono-Regular.ttf", 14f);
+        this.myFont              = loadFontFromResources("/fonts/JetBrainsMono-Regular.ttf", 16f);
         this.myFontConfiguration = SwingTerminalFontConfiguration.newInstance(myFont);
         this.xSize               = this.generator.getXSize();
         this.ySize               = this.generator.getYSize();
@@ -95,7 +95,7 @@ public class Renderer {
     
             }
     
-            Font font = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(size);
+            Font font = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(Font.BOLD, size);
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
     
             return font;

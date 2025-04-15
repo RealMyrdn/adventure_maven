@@ -49,11 +49,11 @@ public class PlayerStatus {
 
             if(player.getHealth() >= i) {
 
-                stringBuilder.append("•");
+                stringBuilder.append("▓");
 
             } else {
 
-                stringBuilder.append(" ");
+                stringBuilder.append("░");
             }
 
         }

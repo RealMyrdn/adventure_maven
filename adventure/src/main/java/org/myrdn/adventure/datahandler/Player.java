@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Player implements Serializable {
     
-    private final ArrayList<Integer> inventory;
+    private final ArrayList<ItemObject> inventory;
     private final String name;
 
     private int previousPosX;
@@ -24,7 +24,7 @@ public class Player implements Serializable {
         this.playerPosY       = PosY;
         this.previousPosX     = 0;
         this.previousPosY     = 0;
-        this.maxHealth        = 10;
+        this.maxHealth        = 15;
         this.health           = 10;
         this.attack           = 1;
         this.inventory        = new ArrayList<>();
@@ -103,24 +103,36 @@ public class Player implements Serializable {
     
     }
 
-    public void addItemInv(int item) {
+    public void addItemInv(ItemObject item) {
     
         this.inventory.add(item);
     
     }
 
-    public void removeItemInv(int item) {
+    public void removeItemInv(ItemObject item) {
 
-        for(int i = 0; i < inventory.size(); i++) {
-            
-            if(inventory.get(i) == item) {
-            
-                inventory.remove(i);
-            
-            }
-        
-        }
+        inventory.remove(item);
     
+    }
+
+    public ArrayList<ItemObject> getIventory() {
+
+        return this.inventory;
+
+    }
+
+    public String getIventoryAsList() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(ItemObject item : this.inventory) {
+
+            stringBuilder.append(item.getName()).append(" ");
+
+        }
+        
+        return stringBuilder.toString();
+        
     }
 
     public int getEquippedItem() {
