@@ -7,17 +7,17 @@ import java.util.Random;
 
 public class Room implements Serializable {
     
-    private final int roomType;
-    private final String roomInfo;
     private final ArrayList<GameObject> objects;
+    private final String roomInfo;
+    private final int roomType;
     
     private static final Random RANDOM = new Random();
     
     public Room(int roomType, ArrayList<GameObject> availableObjects) {
 
-        this.roomType = roomType;
         this.objects  = addObjects(availableObjects);
         this.roomInfo = generateRoomInfo();
+        this.roomType = roomType;
     
     }
 
@@ -56,13 +56,19 @@ public class Room implements Serializable {
         if(this.objects != null && !this.objects.isEmpty()) {
     
             if(this.objects.size() <= 1) {
+
                 stringbuilder.append("Als du dich umschaust, siehst du ein Objekt, das hier herumsteht.\n");
+            
             } else {
+            
                 stringbuilder.append("Als du dich umschaust, siehst du ").append(this.objects.size()).append(" Objekte, die hier verstreut herumstehen.\n");
+            
             }
     
         } else {
+            
             stringbuilder.append("Hier scheint es nichts von Interesse zu geben.\n");
+        
         }
     
     }

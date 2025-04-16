@@ -111,9 +111,9 @@ public class TextBox {
 
         ArrayList<String> builtWindow = new ArrayList<>();
 
-        int titleLength = title.length();
+        int titleLength  = title.length();
         int totalPadding = this.width - (6 + titleLength);
-        int leftPadding = totalPadding / 2;
+        int leftPadding  = totalPadding / 2;
         int rightPadding = totalPadding - leftPadding;
     
         String topBorder = String.format("╔%s╡ %s ╞%s╗", HORIZONTAL_LINE.repeat(Math.max(0, leftPadding)), title, HORIZONTAL_LINE.repeat(Math.max(0, rightPadding)));

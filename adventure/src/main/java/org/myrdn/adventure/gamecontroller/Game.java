@@ -292,7 +292,7 @@ public class Game {
 
         if(instructions != null) {
 
-            
+            // TODO: GameItem Methoden zur Benutzung geben.
 
         }
       
