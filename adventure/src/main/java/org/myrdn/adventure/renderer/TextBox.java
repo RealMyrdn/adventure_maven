@@ -5,6 +5,9 @@ import java.util.Arrays;
 
 public class TextBox {
 
+    public static String HORIZONTAL_LINE = "═";
+    public static String WHITE_SPACE = " ";
+
     private final ArrayList<String> window;
     private final String title;
     private final int boxPosX;
@@ -75,14 +78,14 @@ public class TextBox {
         
         int charCounter = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        ArrayList<String> textList = new ArrayList<>(Arrays.asList(text.split(" ")));
+        ArrayList<String> textList = new ArrayList<>(Arrays.asList(text.split(WHITE_SPACE)));
         ArrayList<String> formatText = new ArrayList<>();
 
         for(String word : textList) {
             
-            if(charCounter + word.length() < this.width -4 && !word.equals("\n")) {
+            if(charCounter + word.length() < this.width - 4 && !word.equals("\n")) {
             
-                stringBuilder.append(word).append(" ");
+                stringBuilder.append(word).append(WHITE_SPACE);
                 charCounter += word.length() + 1;
             
             } else {
@@ -90,7 +93,7 @@ public class TextBox {
                 formatText.add(stringBuilder.toString());
                 stringBuilder.setLength(0);
                 charCounter = 0;
-                stringBuilder.append(word).append(" ");
+                stringBuilder.append(word).append(WHITE_SPACE);
                 charCounter += word.length() + 1;
             
             }
@@ -113,10 +116,10 @@ public class TextBox {
         int leftPadding = totalPadding / 2;
         int rightPadding = totalPadding - leftPadding;
     
-        String topBorder = String.format("╔%s╡ %s ╞%s╗", "═".repeat(Math.max(0, leftPadding)), title, "═".repeat(Math.max(0, rightPadding)));
+        String topBorder = String.format("╔%s╡ %s ╞%s╗", HORIZONTAL_LINE.repeat(Math.max(0, leftPadding)), title, HORIZONTAL_LINE.repeat(Math.max(0, rightPadding)));
         builtWindow.add(topBorder);
     
-        String emptyLine = String.format("║%s║", " ".repeat(this.width - 2));
+        String emptyLine = String.format("║%s║", WHITE_SPACE.repeat(this.width - 2));
         builtWindow.add(emptyLine);
         
         if(formattedText != null && !formattedText.isEmpty()) {
@@ -127,19 +130,19 @@ public class TextBox {
 
                     if(this.width - formattedText.get(i).length() - 4 >= 0) {
                         
-                        String textLine = String.format("║ %s%s ║", formattedText.get(i), " ".repeat(this.width - formattedText.get(i).length() - 4));
+                        String textLine = String.format("║ %s%s ║", formattedText.get(i), WHITE_SPACE.repeat(this.width - formattedText.get(i).length() - 4));
                         builtWindow.add(textLine);
                     
                     } else {
                     
-                        emptyLine = String.format("║%s║", " ".repeat(this.width - 2));
+                        emptyLine = String.format("║%s║", WHITE_SPACE.repeat(this.width - 2));
                         builtWindow.add(emptyLine);
                     
                     }
                 
                 } else {
                     
-                    emptyLine = String.format("║%s║", " ".repeat(this.width - 2));
+                    emptyLine = String.format("║%s║", WHITE_SPACE.repeat(this.width - 2));
                     builtWindow.add(emptyLine);
                 
                 }
@@ -148,7 +151,7 @@ public class TextBox {
 
         }
     
-        String bottomBorder = String.format("╚%s╝", "═".repeat(this.width - 2));
+        String bottomBorder = String.format("╚%s╝", HORIZONTAL_LINE.repeat(this.width - 2));
         builtWindow.add(bottomBorder);
     
         return builtWindow;
