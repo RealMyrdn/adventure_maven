@@ -116,39 +116,39 @@ public class TextBoxList {
     
     public ArrayList<Object> update() {
 
-    ArrayList<Object> renderObject = new ArrayList<>();
-    char[][] newCanvas             = new char[canvasHeight][canvasWidth];
+        ArrayList<Object> renderObject = new ArrayList<>();
+        char[][] newCanvas             = new char[canvasHeight][canvasWidth];
 
-    renderObject.add(canvasX);
-    renderObject.add(canvasY);
+        renderObject.add(canvasX);
+        renderObject.add(canvasY);
 
-    if(canvasChanged) {
+        if(canvasChanged) {
 
-        for(TextBox instance : instances) {
+            for(TextBox instance : instances) {
 
-            List<String> window = instance.getWindow();
-            int startY          = instance.getBoxPosY() - canvasY;
-            int startX          = instance.getBoxPosX() - canvasX;
+                List<String> window = instance.getWindow();
+                int startY          = instance.getBoxPosY() - canvasY;
+                int startX          = instance.getBoxPosX() - canvasX;
 
-            for(int row = 0; row < instance.getHeight(); row++) {
-               
-                for(int col = 0; col < instance.getWidth(); col++) {
-                   
-                    newCanvas[startY + row][startX + col] = window.get(row).charAt(col);
+                for(int row = 0; row < instance.getHeight(); row++) {
+                
+                    for(int col = 0; col < instance.getWidth(); col++) {
+                    
+                        newCanvas[startY + row][startX + col] = window.get(row).charAt(col);
+                    
+                    }
                 
                 }
             
             }
+
+            this.canvas = newCanvas;
+            this.canvasChanged = false;
         
         }
 
-        this.canvas = newCanvas;
-        this.canvasChanged = false;
-    
-    }
-
-    renderObject.add(this.canvas);
-    return renderObject;
+        renderObject.add(this.canvas);
+        return renderObject;
 
     }
 

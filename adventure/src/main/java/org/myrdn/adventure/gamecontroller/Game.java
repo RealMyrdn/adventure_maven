@@ -172,7 +172,6 @@ public class Game {
             case "nimm" -> handleTake(instructions);
             case "inventar" -> handleInventory();
             case "benutze" -> handleUse(instructions);
-            case "render" -> this.renderer.renderFrame();
 
         }
     }
