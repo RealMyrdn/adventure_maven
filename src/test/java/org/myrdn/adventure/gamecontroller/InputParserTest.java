@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.googlecode.lanterna.input.KeyStroke;
@@ -17,6 +18,10 @@ class InputParserTest {
 
     private InputParser parser;
 
+    @BeforeEach
+    void setUp() {
+        parser = new InputParser();
+    }
 
     @Test
     void testProcessEmptyKeyStrokes() throws IOException {
