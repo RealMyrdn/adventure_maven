@@ -12,7 +12,7 @@ import org.myrdn.adventure.datahandler.Room;
 public class Generator {
 
     private static final Random RANDOM    = new Random();
-    private static final int MAX_ATTEMPTS = 2000000;
+    private static final int MAX_ATTEMPTS = 2000;
 
     private final Layout layoutObject;
     private final int[][] layout;

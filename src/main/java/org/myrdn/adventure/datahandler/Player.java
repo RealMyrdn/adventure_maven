@@ -3,6 +3,10 @@ package org.myrdn.adventure.datahandler;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Represents the player character in the game.
+ * Manages player position, health, attack, and inventory.
+ */
 public class Player implements Serializable {
     
     private final ArrayList<ItemObject> inventory;
@@ -25,7 +29,7 @@ public class Player implements Serializable {
         this.previousPosX     = 0;
         this.previousPosY     = 0;
         this.maxHealth        = 15;
-        this.health           = 10;
+        this.health           = 15;
         this.attack           = 1;
         this.inventory        = new ArrayList<>();
         this.equippedItem     = 0;
@@ -50,13 +54,19 @@ public class Player implements Serializable {
     
     } 
 
+    /**
+     * Sets the player's position and tracks the previous position.
+     *
+     * @param posX New X coordinate
+     * @param posY New Y coordinate
+     */
     public void setPosition(int posX, int posY) {
-    
+
         this.previousPosX = this.playerPosX;
         this.previousPosY = this.playerPosY;
         this.playerPosX   = posX;
         this.playerPosY   = posY;
-    
+
     }
 
     public int getMaxHealth() {
@@ -77,18 +87,23 @@ public class Player implements Serializable {
     
     }
 
+    /**
+     * Sets the player's health, capping it at max health.
+     *
+     * @param health The new health value
+     */
     public void setHealth(int health) {
-    
+
         if(health > this.maxHealth) {
-    
+
             this.health = this.maxHealth;
-    
+
         } else {
-    
+
             this.health = health;
-    
+
         }
-    
+
     }
 
     public int getAttack() {
@@ -103,16 +118,26 @@ public class Player implements Serializable {
     
     }
 
+    /**
+     * Adds an item to the player's inventory.
+     *
+     * @param item The item to add
+     */
     public void addItemInv(ItemObject item) {
-    
+
         this.inventory.add(item);
-    
+
     }
 
+    /**
+     * Removes an item from the player's inventory.
+     *
+     * @param item The item to remove
+     */
     public void removeItemInv(ItemObject item) {
 
         inventory.remove(item);
-    
+
     }
 
     public ArrayList<ItemObject> getIventory() {
@@ -127,12 +152,34 @@ public class Player implements Serializable {
 
         for(ItemObject item : this.inventory) {
 
-            stringBuilder.append(item.getName()).append(" ");
+            stringBuilder.append(item.getName()).append("\n");
 
         }
-        
+
         return stringBuilder.toString();
-        
+
+    }
+
+    /**
+     * Gets an item from the inventory by name (case-insensitive).
+     *
+     * @param itemName The name of the item to find
+     * @return The ItemObject if found, null otherwise
+     */
+    public ItemObject getItemFromInventory(String itemName) {
+
+        if(itemName == null) return null;
+
+        for(ItemObject item : this.inventory) {
+
+            if(item.getName().equalsIgnoreCase(itemName)) {
+                return item;
+            }
+
+        }
+
+        return null;
+
     }
 
     public int getEquippedItem() {
@@ -147,6 +194,11 @@ public class Player implements Serializable {
     
     }
 
+    /**
+     * Checks if the player has moved since the last position update.
+     *
+     * @return true if player has moved, false otherwise
+     */
     public boolean hasMoved() {
 
         return (this.previousPosX != this.playerPosX) || (this.previousPosY != this.playerPosY);

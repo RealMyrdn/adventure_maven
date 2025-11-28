@@ -146,19 +146,19 @@ public final class Map {
         
                 for(int x = 0; x < this.rooms[y].length; x++) {
         
-                    newMap[y][x] = isTileVisible(x, y) ? RoomType.fromIndexAsChar(rooms[y][x].getRoomType()) : HIDDEN;
+                    newMap[y][x] = isTileVisible(x, y) ? RoomType.fromIndexAsChar(rooms[y][x].getRoomConnections()) : HIDDEN;
 
                 }
 
             }
         
-            this.previousMap = newMap;
+            this.previousMap = addBorder(newMap);
 
         }
 
         renderObject.add(mapPosX);
         renderObject.add(mapPosY);
-        renderObject.add(addBorder(this.previousMap));
+        renderObject.add(this.previousMap);
 
         return renderObject;
 

@@ -11,25 +11,36 @@ public class ItemObject implements Serializable {
     private final String description;
 
     public ItemObject(String name, int maxUses, String description) {
-        this.id = counter++;
-        this.name = name;
-        this.maxUses = maxUses;
+
+        this.id          = counter++;
+        this.name        = name;
+        this.maxUses     = maxUses;
         this.description = description;
+    
     }
 
     public int getId() {
+    
         return this.id;
+    
     }
 
     public String getName() {
+    
         return this.name;
+    
     }
 
     public int getMaxUses() {
+    
         return this.maxUses;
+    
     }
 
     public String getDescription() {
+    
         return this.description;
+    
     }
+
 }

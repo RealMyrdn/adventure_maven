@@ -18,17 +18,24 @@ public class DataHandler {
         InputStream inputStream = DataHandler.class.getResourceAsStream("/csv/objects.csv");
 
         if (inputStream == null) {
+
             throw new IOException("CSV-Datei nicht gefunden");
+            
         }
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
 
         while((line = reader.readLine()) != null) {
+
             String[] item = line.split("; ");
+
             for(int i = 0; i < Integer.parseInt(item[2]); i++) {
+
                 gameObjects.add(new GameObject(item[0], Integer.parseInt(item[1]), item[3]));
+
             }
+
         }
 
         return gameObjects;
@@ -40,17 +47,24 @@ public class DataHandler {
         InputStream inputStream = DataHandler.class.getResourceAsStream("/csv/items.csv");
 
         if (inputStream == null) {
+
             throw new IOException("CSV-Datei nicht gefunden");
+
         }
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
 
         while((line = reader.readLine()) != null) {
+
             String[] item = line.split("; ");
+
             for(int i = 0; i < Integer.parseInt(item[2]); i++) {
+
                 itemObjects.add(new ItemObject(item[0], Integer.parseInt(item[1]), item[3]));
+
             }
+
         }
 
         return itemObjects;
@@ -63,7 +77,9 @@ public class DataHandler {
         FileOutputStream fos = new FileOutputStream(fileName);
         
         try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+
             oos.writeObject(savegame);
+
         }
     }
 
@@ -74,7 +90,9 @@ public class DataHandler {
         SaveGame savegame;
     
         try (ObjectInputStream ois = new ObjectInputStream(fin)) {
+
             savegame = (SaveGame) ois.readObject();
+
         }
         
         return savegame;

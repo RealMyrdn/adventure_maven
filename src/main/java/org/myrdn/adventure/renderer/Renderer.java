@@ -7,15 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.myrdn.adventure.datahandler.ItemObject;
 import org.myrdn.adventure.datahandler.Player;
 import org.myrdn.adventure.gamecontroller.Generator;
 
-import com.googlecode.lanterna.SGR;
-import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import static com.googlecode.lanterna.TerminalTextUtils.isControlCharacter;
-import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
@@ -186,125 +182,6 @@ public class Renderer {
                 }
             
             }
-
-        }
-
-    }
-
-    public void renderTextBox(TextBox textBox) {
-        
-        int startX = textBox.getBoxPosX();
-        int startY = textBox.getBoxPosY();
-        ArrayList<String> window = textBox.getWindow();
-    
-        for(int y = 0; y < window.size(); y++) {
-            
-            String line = window.get(y);
-            
-            for(int x = 0; x < line.length(); x++) {
-            
-                textGraphics.putString(startX + x, startY + y, String.valueOf(line.charAt(x)));
-            
-            }
-        
-        }
-    
-    }
-    
-
-    public void putMapTitle() {
-    
-        this.textGraphics.setForegroundColor(TextColor.ANSI.WHITE_BRIGHT);
-        this.textGraphics.putString((this.xSize - 3) / 2, this.ySize + 1, "Karte", SGR.BOLD);
-    
-    }
-
-    public void putGreenBorder(int x, int y) {
-    
-        this.textGraphics.setForegroundColor(TextColor.ANSI.YELLOW);
-        this.textGraphics.setBackgroundColor(TextColor.ANSI.YELLOW);
-        this.textGraphics.putString(x, y, " ");
-    
-    }
-    
-    public void clearTextField(String backgroundColor, String foregroundColor, int height) {
-    
-        this.textGraphics.setBackgroundColor(TextColor.ANSI.valueOf(backgroundColor));
-        this.textGraphics.setForegroundColor(TextColor.ANSI.valueOf(foregroundColor));
-        this.textGraphics.fillRectangle(new TerminalPosition(40, height), new TerminalSize(80, 8), ' ');
-    
-    }
-
-    public void printRoomDescription(String description, int height) {
-    
-        clearTextField("BLACK", "CYAN_BRIGHT", height);
-        String[] rows = description.split("\n");
-    
-        for(int y = 0; y < rows.length; y++) {
-    
-            this.textGraphics.putString(40, height + y, rows[y]);
-    
-        }
-    
-    }
-
-    public void printObjectDescription(String description, ArrayList<ItemObject> itemObjects, int height) {
-    
-        clearTextField("BLACK", "GREEN_BRIGHT", height);        
-        StringBuilder stringBuilder = new StringBuilder();
-        String[] splitDescription = description.split(" ");
-        int charCounter = 0;
-
-        for(String word : splitDescription) {
-
-            if(charCounter + word.length() < 60) {
-
-                stringBuilder.append(word).append(" ");
-                charCounter += word.length() + 1;
-
-            } else {
-
-                charCounter = 0;
-                charCounter += word.length();
-                stringBuilder.append("\n").append(word).append(" ");
-
-            }
-
-        }
-
-        stringBuilder.append("\n");
-
-        if(!itemObjects.isEmpty()) {
-
-            stringBuilder.append("Das Objekte enthält folgende Gegenstände: \n");
-
-            for(ItemObject item : itemObjects) {
-
-                stringBuilder.append(item.getName()).append("\n");
-
-            }
-
-        }
-
-        String objectDescription = stringBuilder.toString();
-        String[] rows = objectDescription.split("\n");
-
-        for(int y = 0; y < rows.length; y++) {
-
-            this.textGraphics.putString(40, height + y, rows[y]);
-
-        }
-
-    }
-
-    public void printDescription(String description, int height) {
-
-        clearTextField("BLACK", "CYAN_BRIGHT", height);
-        String[] rows = description.split("\n");
-
-        for(int y = 0; y < rows.length; y++) {
-
-            this.textGraphics.putString(40, height + y, rows[y]);
 
         }
 

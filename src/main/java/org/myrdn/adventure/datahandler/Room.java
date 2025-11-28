@@ -8,22 +8,26 @@ import java.util.Random;
 public class Room implements Serializable {
     
     private final int roomType;
+    private final int roomConnections;
     private final String roomInfo;
+    private final int[][] roomLayout;
     private final ArrayList<GameObject> objects;
     
     private static final Random RANDOM = new Random();
     
-    public Room(int roomType, ArrayList<GameObject> availableObjects) {
+    public Room(int roomConnections, ArrayList<GameObject> availableObjects) {
 
-        this.roomType = roomType;
-        this.objects  = addObjects(availableObjects);
-        this.roomInfo = generateRoomInfo();
+        this.roomConnections = roomConnections;
+        this.roomLayout      = new int[18][32];
+        this.roomType        = 0;
+        this.roomInfo        = generateRoomInfo();
+        this.objects         = addObjects(availableObjects);
     
     }
 
-    public int getRoomType() {
+    public int getRoomConnections() {
     
-        return this.roomType;
+        return this.roomConnections;
     
     }
 
@@ -33,16 +37,28 @@ public class Room implements Serializable {
     
     }
 
+    public int getRoomType() {
+
+        return this.roomType;
+        
+    }
+
     public String getRoomInfo() {
     
         return this.roomInfo;
     
     }
 
+    public int[][] getRoomLayout() {
+
+        return this.roomLayout;
+
+    }
+
     private String generateRoomInfo() {
     
         StringBuilder stringbuilder = new StringBuilder();
-        int doors = Integer.bitCount(roomType);
+        int doors = Integer.bitCount(roomConnections);
 
         checkExits(doors, stringbuilder);
         checkObjects(stringbuilder);
@@ -56,13 +72,19 @@ public class Room implements Serializable {
         if(this.objects != null && !this.objects.isEmpty()) {
     
             if(this.objects.size() <= 1) {
+
                 stringbuilder.append("Als du dich umschaust, siehst du ein Objekt, das hier herumsteht.\n");
+
             } else {
+
                 stringbuilder.append("Als du dich umschaust, siehst du ").append(this.objects.size()).append(" Objekte, die hier verstreut herumstehen.\n");
+
             }
     
         } else {
+
             stringbuilder.append("Hier scheint es nichts von Interesse zu geben.\n");
+
         }
     
     }

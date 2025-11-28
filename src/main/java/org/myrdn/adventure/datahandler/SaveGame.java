@@ -5,12 +5,12 @@ import java.io.Serializable;
 public class SaveGame implements Serializable {
 
     private final Player player;
-    private final House house;
+    private final Dungeon dungeon;
     
-    public SaveGame(Player player, House house) {
+    public SaveGame(Player player, Dungeon dungeon) {
     
         this.player = player;
-        this.house = house;
+        this.dungeon = dungeon;
     
     }
 
@@ -20,9 +20,9 @@ public class SaveGame implements Serializable {
     
     }
 
-    public House getHouse() {
+    public Dungeon getHouse() {
     
-        return this.house;
+        return this.dungeon;
     
     }
     

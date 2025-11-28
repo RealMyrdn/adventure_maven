@@ -117,6 +117,7 @@ public class TextBoxList {
     public ArrayList<Object> update() {
 
     ArrayList<Object> renderObject = new ArrayList<>();
+    // StyleCell[][] styleCanvas      = new StyleCell[canvasHeight][canvasWidth];
     char[][] newCanvas             = new char[canvasHeight][canvasWidth];
 
     renderObject.add(canvasX);

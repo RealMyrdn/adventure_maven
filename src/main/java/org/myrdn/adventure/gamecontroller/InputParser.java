@@ -10,8 +10,13 @@ public class InputParser {
 
     public ArrayList<String> processKeyStrokes(ArrayList<KeyStroke> keyStrokes) throws IOException {
 
-        StringBuilder stringBuilder = new StringBuilder();
         ArrayList<String> instructions = new ArrayList<>();
+
+        if(keyStrokes == null || keyStrokes.isEmpty()) {
+            return instructions;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
 
         for(KeyStroke keyStroke : keyStrokes) {
 
@@ -19,7 +24,13 @@ public class InputParser {
 
         }
 
-        String[] commands = stringBuilder.toString().toLowerCase().split(" ", 2);
+        String commandString = stringBuilder.toString().trim();
+
+        if(commandString.isEmpty()) {
+            return instructions;
+        }
+
+        String[] commands = commandString.toLowerCase().split(" ", 2);
         instructions.addAll(Arrays.asList(commands));
 
         return instructions;
