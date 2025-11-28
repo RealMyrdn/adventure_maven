@@ -1,14 +1,14 @@
 package org.myrdn.adventure.gamecontroller;
 
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import com.googlecode.lanterna.input.KeyStroke;
 
 /**
  * Unit tests for InputParser class.
@@ -17,10 +17,6 @@ class InputParserTest {
 
     private InputParser parser;
 
-    @BeforeEach
-    void setUp() {
-        parser = new InputParser();
-    }
 
     @Test
     void testProcessEmptyKeyStrokes() throws IOException {
