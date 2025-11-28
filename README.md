@@ -75,16 +75,33 @@ mvn checkstyle:check
 
 ## Spiel starten
 
-### Mit Maven
+**WICHTIG:** Das Spiel benötigt ein echtes Terminal/Konsole, da es Lanterna für die Terminal-UI verwendet. Es wird nicht korrekt in einer IDE-Konsole funktionieren.
+
+### Schnellstart (Empfohlen für Entwicklung)
 
 ```bash
-mvn exec:java -Dexec.mainClass="org.myrdn.adventure.Main"
+mvn exec:java
 ```
 
-### Mit JAR-Datei
+Dieser Befehl kompiliert das Projekt automatisch und startet das Spiel direkt.
 
+### Alternativ: Mit JAR-Datei
+
+Erst das Projekt bauen:
+```bash
+mvn clean package
+```
+
+Dann das Spiel starten:
 ```bash
 java -jar target/adventure-1.0-SNAPSHOT.jar
+```
+
+### Weitere Start-Optionen
+
+Kompilieren und direkt starten:
+```bash
+mvn clean compile exec:java
 ```
 
 ## Spielanleitung
