@@ -24,7 +24,7 @@ public class Main {
         GameConfig gameConfig = new GameConfig();
 
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("\uD83D\uDC31\u200D\uD83D\uDC64 Textadventure");
+        config.setTitle("Textadventure");
         config.setWindowedMode(gameConfig.getWindowWidth(), gameConfig.getWindowHeight());
         config.setResizable(gameConfig.isWindowResizable());
         config.useVsync(gameConfig.isVsyncEnabled());

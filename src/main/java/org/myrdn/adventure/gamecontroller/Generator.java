@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import org.myrdn.adventure.datahandler.Enemy;
 import org.myrdn.adventure.datahandler.GameObject;
 import org.myrdn.adventure.datahandler.ItemObject;
 import org.myrdn.adventure.datahandler.Layout;
@@ -20,16 +21,16 @@ public class Generator {
     private final int xSize;
     private final int ySize;
     
-    public Generator(Layout layoutObject, ArrayList<GameObject> availableObjects, ArrayList<ItemObject> availableItems) {
+    public Generator(Layout layoutObject, ArrayList<GameObject> availableObjects, ArrayList<ItemObject> availableItems, ArrayList<Enemy> availableEnemies) {
 
         this.layoutObject = layoutObject;
         this.xSize  = layoutObject.getXSize();
         this.ySize  = layoutObject.getYSize();
         this.layout = layoutObject.getLayout();
         this.rooms  = new Room[ySize][xSize];
-    
-        buildMap(availableItems, availableObjects);
-    
+
+        buildMap(availableItems, availableObjects, availableEnemies);
+
     }
 
     public int getXSize() {
@@ -50,25 +51,26 @@ public class Generator {
     
     }
 
-    private void buildMap(ArrayList<ItemObject> availableItems, ArrayList<GameObject> availableObjects) {
-    
+    private void buildMap(ArrayList<ItemObject> availableItems, ArrayList<GameObject> availableObjects, ArrayList<Enemy> availableEnemies) {
+
         int count = 0;
-    
+
         do {
 
             count++;
             this.layoutObject.buildLayout();
-    
+
             if(count > MAX_ATTEMPTS) {
-    
+
                 throw new RuntimeException("Es konnte keine vollverbundene Karte nach " + MAX_ATTEMPTS + " Versuchen erstellt werden.");
-    
+
             }
-    
+
         } while(!this.layoutObject.isFullyConnected());
-    
+
         placeRooms(availableObjects, availableItems);
-    
+        placeEnemies(availableEnemies);
+
     }
 
     public void placeRooms(ArrayList<GameObject> availableObjects, ArrayList<ItemObject> availableItems) {
@@ -179,9 +181,40 @@ public class Generator {
         }
     
         return newObjects;
-    
-    }
-    
 
+    }
+
+    private void placeEnemies(ArrayList<Enemy> availableEnemies) {
+
+        if (availableEnemies == null || availableEnemies.isEmpty()) {
+            return;
+        }
+
+        Collections.shuffle(availableEnemies);
+
+        // Startposition des Spielers - hier keine Gegner platzieren
+        int startX = Layout.startPosX;
+        int startY = Layout.startPosY;
+
+        for (Enemy enemy : availableEnemies) {
+            // Zufällige Position wählen (nicht Startposition)
+            int attempts = 0;
+            while (attempts < 100) {
+                int x = RANDOM.nextInt(xSize);
+                int y = RANDOM.nextInt(ySize);
+
+                // Nicht auf Startposition und Raum hat noch keinen Gegner
+                if ((x != startX || y != startY) && !rooms[y][x].hasEnemy()) {
+                    // 40% Chance einen Gegner in diesem Raum zu platzieren
+                    if (RANDOM.nextInt(10) >= 6) {
+                        rooms[y][x].setEnemy(enemy);
+                        break;
+                    }
+                }
+                attempts++;
+            }
+        }
+
+    }
 
 }

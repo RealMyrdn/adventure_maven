@@ -6,20 +6,22 @@ import java.util.Collections;
 import java.util.Random;
 
 public class Room implements Serializable {
-    
+
     private final int roomType;
     private final int roomConnections;
     private final int[][] roomLayout;
     private final ArrayList<GameObject> objects;
-    
+    private Enemy enemy;
+
     private static final Random RANDOM = new Random();
-    
+
     public Room(int roomConnections, ArrayList<GameObject> availableObjects) {
 
         this.roomConnections = roomConnections;
         this.roomLayout      = new int[18][32];
         this.roomType        = 0;
         this.objects         = addObjects(availableObjects);
+        this.enemy           = null;
 
     }
 
@@ -66,9 +68,9 @@ public class Room implements Serializable {
     }
 
     private void checkObjects(StringBuilder stringbuilder) {
-    
+
         if(this.objects != null && !this.objects.isEmpty()) {
-    
+
             if(this.objects.size() <= 1) {
 
                 stringbuilder.append("Als du dich umschaust, siehst du ein Objekt, das hier herumsteht.\n");
@@ -78,13 +80,39 @@ public class Room implements Serializable {
                 stringbuilder.append("Als du dich umschaust, siehst du ").append(this.objects.size()).append(" Objekte, die hier verstreut herumstehen.\n");
 
             }
-    
+
         } else {
 
             stringbuilder.append("Hier scheint es nichts von Interesse zu geben.\n");
 
         }
-    
+
+        checkEnemy(stringbuilder);
+
+    }
+
+    private void checkEnemy(StringBuilder stringbuilder) {
+
+        if(this.enemy != null && this.enemy.isAlive()) {
+            stringbuilder.append("\nVorsicht! Ein ").append(this.enemy.getName()).append(" lauert hier!");
+        }
+
+    }
+
+    public Enemy getEnemy() {
+        return this.enemy;
+    }
+
+    public void setEnemy(Enemy enemy) {
+        this.enemy = enemy;
+    }
+
+    public boolean hasEnemy() {
+        return this.enemy != null && this.enemy.isAlive();
+    }
+
+    public void removeEnemy() {
+        this.enemy = null;
     }
 
     public String getRoomObjects() {

@@ -9,6 +9,7 @@ import org.myrdn.adventure.AdventureGame;
 import org.myrdn.adventure.config.GameConfig;
 import org.myrdn.adventure.datahandler.DataHandler;
 import org.myrdn.adventure.datahandler.Dungeon;
+import org.myrdn.adventure.datahandler.Enemy;
 import org.myrdn.adventure.datahandler.GameObject;
 import org.myrdn.adventure.datahandler.ItemObject;
 import org.myrdn.adventure.datahandler.Layout;
@@ -57,6 +58,8 @@ public class GameScreen extends BaseScreen {
     private int yPos;
     private long lastAutoSaveTime;
     private boolean autosaveEnabled;
+    private boolean inCombat;
+    private Enemy currentEnemy;
 
     // Constructor for new game
     public GameScreen(AdventureGame game, String playerName, boolean autosaveEnabled) {
@@ -80,7 +83,7 @@ public class GameScreen extends BaseScreen {
             xSize = config.getDungeonWidth();
             ySize = config.getDungeonHeight();
             layout = new Layout(xSize, ySize);
-            generator = new Generator(layout, datahandler.loadObjects(), datahandler.loadItems());
+            generator = new Generator(layout, datahandler.loadObjects(), datahandler.loadItems(), datahandler.loadEnemies());
             player = new Player(playerName, Layout.startPosX, Layout.startPosY);
             dungeon = new Dungeon(generator.getRooms());
             inputParser = new InputParser();
@@ -321,6 +324,8 @@ public class GameScreen extends BaseScreen {
             case "inventar" -> handleInventory();
             case "benutze" -> handleUse(instructions);
             case "speichern" -> handleSave();
+            case "angreifen", "angriff", "kämpfen" -> handleAttack();
+            case "fliehen", "flucht" -> handleFlee();
             case "hilfe" -> handleHelp();
             default -> showMessage("Unbekannter Befehl: '" + command + "'. Tippe 'hilfe' für verfügbare Befehle.");
         }
@@ -473,8 +478,100 @@ public class GameScreen extends BaseScreen {
             return;
         }
 
-        logger.debug("Using item: {}", itemName);
-        showMessage("Du benutzt: " + item.getName() + ". " + item.getDescription());
+        if (item.isUsedUp()) {
+            showMessage("'" + item.getName() + "' ist aufgebraucht.");
+            return;
+        }
+
+        logger.debug("Using item: {} with effect {}", itemName, item.getEffectType());
+
+        Room currentRoom = dungeon.getRoom(xPos, yPos);
+        StringBuilder result = new StringBuilder();
+        result.append("Du benutzt: ").append(item.getName()).append("\n\n");
+
+        switch (item.getEffectType()) {
+            case HEAL -> {
+                int healAmount = item.getEffectValue();
+                int oldHealth = player.getHealth();
+                player.setHealth(player.getHealth() + healAmount);
+                int actualHeal = player.getHealth() - oldHealth;
+                result.append("Du wirst um ").append(actualHeal).append(" HP geheilt.\n");
+                result.append("HP: ").append(player.getHealth()).append("/").append(player.getMaxHealth());
+                item.use();
+            }
+            case ATTACK_BOOST -> {
+                int boost = item.getEffectValue();
+                player.setAttack(player.getAttack() + boost);
+                result.append("Dein Angriff steigt um ").append(boost).append("!\n");
+                result.append("Angriff: ").append(player.getAttack());
+                if (item.isConsumable()) {
+                    item.use();
+                }
+            }
+            case DEFENSE_BOOST -> {
+                // Wir brauchen defense im Player - vorerst erhöhen wir maxHealth
+                int boost = item.getEffectValue();
+                player.setMaxHealth(player.getMaxHealth() + boost);
+                player.setHealth(player.getHealth() + boost);
+                result.append("Deine Verteidigung steigt!\n");
+                result.append("Max HP: ").append(player.getMaxHealth());
+                if (item.isConsumable()) {
+                    item.use();
+                }
+            }
+            case DAMAGE -> {
+                if (!currentRoom.hasEnemy()) {
+                    result.append("Kein Gegner in der Nähe!");
+                } else {
+                    Enemy enemy = currentRoom.getEnemy();
+                    int damage = item.getEffectValue();
+                    enemy.takeDamage(damage);
+                    result.append("Du verursachst ").append(damage).append(" Schaden an ").append(enemy.getName()).append("!\n");
+                    if (!enemy.isAlive()) {
+                        result.append("\nDer ").append(enemy.getName()).append(" wurde besiegt!");
+                        currentRoom.removeEnemy();
+                    } else {
+                        result.append("Gegner HP: ").append(enemy.getHealth()).append("/").append(enemy.getMaxHealth());
+                    }
+                    item.use();
+                }
+            }
+            case FLEE -> {
+                if (!currentRoom.hasEnemy()) {
+                    result.append("Du bist nicht in Gefahr.");
+                } else {
+                    // Garantierte Flucht
+                    int roomType = currentRoom.getRoomConnections();
+                    if ((roomType & NORTH) != 0 && yPos > 0) {
+                        player.setPosition(xPos, yPos - 1);
+                    } else if ((roomType & SOUTH) != 0 && yPos < ySize - 1) {
+                        player.setPosition(xPos, yPos + 1);
+                    } else if ((roomType & WEST) != 0 && xPos > 0) {
+                        player.setPosition(xPos - 1, yPos);
+                    } else if ((roomType & EAST) != 0 && xPos < xSize - 1) {
+                        player.setPosition(xPos + 1, yPos);
+                    }
+                    xPos = player.getX();
+                    yPos = player.getY();
+                    result.append("Du fliehst erfolgreich!");
+                    item.use();
+                    textBoxList.clearList();
+                    textBoxList.addTextBox(40, 15, 40, 10,
+                            dungeon.getRoom(xPos, yPos).getRoomInfo(), "Geflohen!");
+                }
+            }
+            case NONE -> {
+                result.append(item.getDescription());
+            }
+        }
+
+        // Verbrauchte Items entfernen
+        if (item.isUsedUp()) {
+            player.removeItemInv(item);
+            result.append("\n\n(").append(item.getName()).append(" wurde verbraucht)");
+        }
+
+        textBoxList.addTextBox(35, 10, 50, 14, result.toString(), "Item benutzt");
     }
 
     private void handleHelp() {
@@ -485,12 +582,121 @@ public class GameScreen extends BaseScreen {
         help.append("nimm [gegenstand] - Aufnehmen\n");
         help.append("inventar - Dein Inventar\n");
         help.append("benutze [gegenstand] - Benutzen\n");
+        help.append("angreifen - Gegner angreifen\n");
+        help.append("fliehen - Vor Gegner fliehen\n");
         help.append("speichern - Spiel speichern\n");
         help.append("menü - Zurück zum Hauptmenü\n");
         help.append("hilfe - Diese Hilfe\n");
         help.append("exit - Beenden\n");
 
-        textBoxList.addTextBox(30, 8, 50, 22, help.toString(), "Hilfe");
+        textBoxList.addTextBox(30, 8, 50, 24, help.toString(), "Hilfe");
+    }
+
+    private void handleAttack() {
+        Room currentRoom = dungeon.getRoom(xPos, yPos);
+
+        if (!currentRoom.hasEnemy()) {
+            showMessage("Hier gibt es keinen Gegner zum Angreifen.");
+            return;
+        }
+
+        Enemy enemy = currentRoom.getEnemy();
+        inCombat = true;
+        currentEnemy = enemy;
+
+        // Spieler greift an
+        int playerDamage = player.getAttack();
+        int actualDamage = Math.max(1, playerDamage - enemy.getDefense());
+        enemy.takeDamage(playerDamage);
+
+        StringBuilder combatLog = new StringBuilder();
+        combatLog.append("Kampf gegen ").append(enemy.getName()).append("!\n\n");
+        combatLog.append("Du greifst an und verursachst ").append(actualDamage).append(" Schaden.\n");
+
+        if (!enemy.isAlive()) {
+            combatLog.append("\nDu hast den ").append(enemy.getName()).append(" besiegt!");
+            currentRoom.removeEnemy();
+            inCombat = false;
+            currentEnemy = null;
+            textBoxList.addTextBox(35, 12, 50, 12, combatLog.toString(), "Sieg!");
+            return;
+        }
+
+        // Gegner greift zurück
+        int enemyDamage = enemy.getAttack();
+        player.setHealth(player.getHealth() - enemyDamage);
+
+        combatLog.append("Der ").append(enemy.getName()).append(" greift zurück und verursacht ")
+                .append(enemyDamage).append(" Schaden.\n\n");
+        combatLog.append("Gegner: ").append(enemy.getHealth()).append("/").append(enemy.getMaxHealth()).append(" HP\n");
+        combatLog.append("Du: ").append(player.getHealth()).append("/").append(player.getMaxHealth()).append(" HP");
+
+        if (player.getHealth() <= 0) {
+            combatLog.append("\n\nDu wurdest besiegt...");
+            textBoxList.addTextBox(35, 10, 50, 14, combatLog.toString(), "Niederlage");
+            // Game Over nach kurzer Zeit
+            inCombat = false;
+            currentEnemy = null;
+        } else {
+            textBoxList.addTextBox(35, 10, 50, 14, combatLog.toString(), "Kampf");
+        }
+    }
+
+    private void handleFlee() {
+        Room currentRoom = dungeon.getRoom(xPos, yPos);
+
+        if (!currentRoom.hasEnemy()) {
+            showMessage("Hier gibt es nichts, vor dem du fliehen müsstest.");
+            return;
+        }
+
+        Enemy enemy = currentRoom.getEnemy();
+
+        // 50% Chance zu fliehen
+        java.util.Random random = new java.util.Random();
+        if (random.nextInt(100) < 50) {
+            // Flucht erfolgreich - zurück zum vorherigen Raum
+            inCombat = false;
+            currentEnemy = null;
+
+            // Finde einen möglichen Ausgang
+            int roomType = currentRoom.getRoomConnections();
+            if ((roomType & NORTH) != 0 && yPos > 0) {
+                player.setPosition(xPos, yPos - 1);
+            } else if ((roomType & SOUTH) != 0 && yPos < ySize - 1) {
+                player.setPosition(xPos, yPos + 1);
+            } else if ((roomType & WEST) != 0 && xPos > 0) {
+                player.setPosition(xPos - 1, yPos);
+            } else if ((roomType & EAST) != 0 && xPos < xSize - 1) {
+                player.setPosition(xPos + 1, yPos);
+            }
+
+            xPos = player.getX();
+            yPos = player.getY();
+
+            textBoxList.clearList();
+            textBoxList.addTextBox(40, 15, 40, 10,
+                    dungeon.getRoom(xPos, yPos).getRoomInfo(), "Geflohen!");
+            showMessage("Du bist erfolgreich geflohen!");
+        } else {
+            // Flucht fehlgeschlagen - Gegner greift an
+            int enemyDamage = enemy.getAttack();
+            player.setHealth(player.getHealth() - enemyDamage);
+
+            StringBuilder msg = new StringBuilder();
+            msg.append("Flucht fehlgeschlagen!\n\n");
+            msg.append("Der ").append(enemy.getName()).append(" trifft dich beim Fliehen!\n");
+            msg.append("Du erleidest ").append(enemyDamage).append(" Schaden.\n\n");
+            msg.append("Du: ").append(player.getHealth()).append("/").append(player.getMaxHealth()).append(" HP");
+
+            if (player.getHealth() <= 0) {
+                msg.append("\n\nDu wurdest besiegt...");
+                inCombat = false;
+                currentEnemy = null;
+            }
+
+            textBoxList.addTextBox(35, 12, 50, 12, msg.toString(), "Flucht");
+        }
     }
 
     private void showMessage(String message) {

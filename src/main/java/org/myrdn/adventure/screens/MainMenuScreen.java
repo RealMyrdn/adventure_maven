@@ -301,16 +301,19 @@ public class MainMenuScreen extends BaseScreen {
     }
 
     private void renderCredits() {
-        drawBox(30, 8, 60, 18, "Credits");
+        drawBox(30, 8, 60, 23, "Credits");
 
         drawText("Textadventure", 50, 11);
         drawText("Version 1.0", 52, 13);
 
         drawText("Entwickelt mit:", 45, 16);
-        drawText("Java 21", 53, 18);
+        drawText("Java 21", 50, 18);
         drawText("LibGDX 1.12.1", 50, 19);
 
-        drawText("Vielen Dank fürs Spielen!", 44, 22);
+        drawText("Entwickelt von:", 45, 22);
+        drawText("Myrdn", 50, 24);
+
+        drawText("Vielen Dank fürs Spielen!", 44, 27);
 
         drawText("Enter/Esc Zurück", 49, 32);
     }

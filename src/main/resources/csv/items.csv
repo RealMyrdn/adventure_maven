@@ -1,40 +1,40 @@
-Heiltrank; 1; 3; Stellt eine kleine Menge Gesundheit wieder her
-Großer Heiltrank; 3; 2; Stellt eine große Menge Gesundheit wieder her
-Manatrank; 1; 3; Stellt eine kleine Menge Mana wieder her
-Großer Manatrank; 3; 2; Stellt eine große Menge Mana wieder her
-Bomben; 1; 5; Verursacht Flächenschaden bei Gegnern
-Rauchbombe; 1; 3; Ermöglicht eine schnelle Flucht aus dem Kampf
-Feuerzauberrolle; 1; 3; Wirkt einen mächtigen Feuerzauber
-Eiszauberrolle; 1; 3; Wirkt einen mächtigen Eiszauber
-Blitzzauberrolle; 1; 3; Wirkt einen mächtigen Blitzzauber
-Unsichtbarkeitstrank; 1; 2; Macht den Spieler für kurze Zeit unsichtbar
-Teleportationsstein; 1; 1; Teleportiert den Spieler zu einem bekannten Ort
-Schlüssel; -1; 1; Öffnet verschlossene Türen und Truhen
-Dietrich; 3; 5; Kann zum Öffnen von Schlössern verwendet werden
-Goldmünzen; 20; 1; Währung im Spiel, kann zum Kauf von Gegenständen verwendet werden
-Edelsteine; 1; 5; Seltene Währung, kann gegen mächtige Gegenstände eingetauscht werden
-Heilkräuter; 1; 5; Stellt eine kleine Menge Gesundheit wieder her
-Antidot; 1; 3; Heilt Vergiftungen
-Rüstungstrank; 1; 3; Erhöht die Verteidigung für kurze Zeit
-Angriffstrank; 1; 3; Erhöht den Angriff für kurze Zeit
-Geschwindigkeitstrank; 1; 3; Erhöht die Bewegungsgeschwindigkeit für kurze Zeit
-Magischer Ring; -1; 1; Erhöht die Magiekraft des Trägers
-Amulett des Schutzes; -1; 1; Reduziert den erlittenen Schaden
-Stärketrank; 1; 3; Erhöht die Stärke des Spielers für kurze Zeit
-Unsichtbarkeitsumhang; -1; 1; Macht den Träger unsichtbar
-Feuerkristall; 1; 3; Verursacht Feuerschaden bei Gegnern
-Eiskristall; 1; 3; Verursacht Eisschaden bei Gegnern
-Blitzkristall; 1; 3; Verursacht Blitzschaden bei Gegnern
-Heilungszauberbuch; -1; 1; Ermöglicht das Wirken von Heilzaubern
-Feuerzauberbuch; -1; 1; Ermöglicht das Wirken von Feuerzaubern
-Eiszauberbuch; -1; 1; Ermöglicht das Wirken von Eiszaubern
-Blitzzauberbuch; -1; 1; Ermöglicht das Wirken von Blitzzaubern
-Magischer Stab; -1; 1; Erhöht die Magiekraft und ermöglicht das Wirken von Zaubern
-Schwert der Flammen; -1; 1; Verursacht zusätzlichen Feuerschaden
-Frostschwert; -1; 1; Verursacht zusätzlichen Eisschaden
-Blitzschwert; -1; 1; Verursacht zusätzlichen Blitzschaden
-Heilungsamulet; -1; 1; Stellt kontinuierlich Gesundheit wieder her
-Schutzschild; -1; 1; Erhöht die Verteidigung des Trägers
-Magischer Umhang; -1; 1; Erhöht die Magieresistenz des Trägers
-Teleportationsrolle; 1; 2; Teleportiert den Spieler zu einem zufälligen Ort im Dungeon
-Wiederbelebungstrank; 1; 1; Belebt den Spieler nach dem Tod wieder
+Heiltrank; 1; 3; HEAL; 5; Stellt eine kleine Menge Gesundheit wieder her
+Großer Heiltrank; 3; 2; HEAL; 10; Stellt eine große Menge Gesundheit wieder her
+Manatrank; 1; 3; NONE; 0; Stellt eine kleine Menge Mana wieder her
+Großer Manatrank; 3; 2; NONE; 0; Stellt eine große Menge Mana wieder her
+Bomben; 1; 5; DAMAGE; 8; Verursacht Flächenschaden bei Gegnern
+Rauchbombe; 1; 3; FLEE; 0; Ermöglicht eine schnelle Flucht aus dem Kampf
+Feuerzauberrolle; 1; 3; DAMAGE; 6; Wirkt einen mächtigen Feuerzauber
+Eiszauberrolle; 1; 3; DAMAGE; 6; Wirkt einen mächtigen Eiszauber
+Blitzzauberrolle; 1; 3; DAMAGE; 6; Wirkt einen mächtigen Blitzzauber
+Unsichtbarkeitstrank; 1; 2; FLEE; 0; Macht den Spieler für kurze Zeit unsichtbar
+Teleportationsstein; 1; 1; FLEE; 0; Teleportiert den Spieler zu einem bekannten Ort
+Schlüssel; -1; 1; NONE; 0; Öffnet verschlossene Türen und Truhen
+Dietrich; 3; 5; NONE; 0; Kann zum Öffnen von Schlössern verwendet werden
+Goldmünzen; 20; 1; NONE; 0; Währung im Spiel, kann zum Kauf von Gegenständen verwendet werden
+Edelsteine; 1; 5; NONE; 0; Seltene Währung, kann gegen mächtige Gegenstände eingetauscht werden
+Heilkräuter; 1; 5; HEAL; 3; Stellt eine kleine Menge Gesundheit wieder her
+Antidot; 1; 3; HEAL; 2; Heilt Vergiftungen
+Rüstungstrank; 1; 3; DEFENSE_BOOST; 3; Erhöht die Verteidigung für kurze Zeit
+Angriffstrank; 1; 3; ATTACK_BOOST; 3; Erhöht den Angriff für kurze Zeit
+Geschwindigkeitstrank; 1; 3; FLEE; 0; Erhöht die Bewegungsgeschwindigkeit für kurze Zeit
+Magischer Ring; -1; 1; ATTACK_BOOST; 2; Erhöht die Magiekraft des Trägers
+Amulett des Schutzes; -1; 1; DEFENSE_BOOST; 2; Reduziert den erlittenen Schaden
+Stärketrank; 1; 3; ATTACK_BOOST; 2; Erhöht die Stärke des Spielers für kurze Zeit
+Unsichtbarkeitsumhang; -1; 1; FLEE; 0; Macht den Träger unsichtbar
+Feuerkristall; 1; 3; DAMAGE; 5; Verursacht Feuerschaden bei Gegnern
+Eiskristall; 1; 3; DAMAGE; 5; Verursacht Eisschaden bei Gegnern
+Blitzkristall; 1; 3; DAMAGE; 5; Verursacht Blitzschaden bei Gegnern
+Heilungszauberbuch; -1; 1; HEAL; 5; Ermöglicht das Wirken von Heilzaubern
+Feuerzauberbuch; -1; 1; DAMAGE; 4; Ermöglicht das Wirken von Feuerzaubern
+Eiszauberbuch; -1; 1; DAMAGE; 4; Ermöglicht das Wirken von Eiszaubern
+Blitzzauberbuch; -1; 1; DAMAGE; 4; Ermöglicht das Wirken von Blitzzaubern
+Magischer Stab; -1; 1; ATTACK_BOOST; 3; Erhöht die Magiekraft und ermöglicht das Wirken von Zaubern
+Schwert der Flammen; -1; 1; ATTACK_BOOST; 4; Verursacht zusätzlichen Feuerschaden
+Frostschwert; -1; 1; ATTACK_BOOST; 4; Verursacht zusätzlichen Eisschaden
+Blitzschwert; -1; 1; ATTACK_BOOST; 4; Verursacht zusätzlichen Blitzschaden
+Heilungsamulet; -1; 1; HEAL; 2; Stellt kontinuierlich Gesundheit wieder her
+Schutzschild; -1; 1; DEFENSE_BOOST; 4; Erhöht die Verteidigung des Trägers
+Magischer Umhang; -1; 1; DEFENSE_BOOST; 2; Erhöht die Magieresistenz des Trägers
+Teleportationsrolle; 1; 2; FLEE; 0; Teleportiert den Spieler zu einem zufälligen Ort im Dungeon
+Wiederbelebungstrank; 1; 1; HEAL; 15; Belebt den Spieler nach dem Tod wieder
