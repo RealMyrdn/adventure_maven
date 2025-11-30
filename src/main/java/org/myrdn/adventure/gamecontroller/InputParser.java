@@ -4,29 +4,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.googlecode.lanterna.input.KeyStroke;
-
 public class InputParser {
 
-    public ArrayList<String> processKeyStrokes(ArrayList<KeyStroke> keyStrokes) throws IOException {
+    public ArrayList<String> processString(String input) throws IOException {
 
         ArrayList<String> instructions = new ArrayList<>();
 
-        if(keyStrokes == null || keyStrokes.isEmpty()) {
+        if (input == null || input.isEmpty()) {
             return instructions;
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
+        String commandString = input.trim();
 
-        for(KeyStroke keyStroke : keyStrokes) {
-
-            stringBuilder.append(keyStroke.getCharacter().toString());
-
-        }
-
-        String commandString = stringBuilder.toString().trim();
-
-        if(commandString.isEmpty()) {
+        if (commandString.isEmpty()) {
             return instructions;
         }
 

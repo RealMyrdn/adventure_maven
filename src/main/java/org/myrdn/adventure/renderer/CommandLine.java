@@ -2,8 +2,6 @@ package org.myrdn.adventure.renderer;
 
 import java.util.ArrayList;
 
-import com.googlecode.lanterna.input.KeyStroke;
-
 public class CommandLine {
 
     private static volatile CommandLine commandLine;
@@ -21,39 +19,37 @@ public class CommandLine {
     }
 
     public static CommandLine createCommandLine() {
-    
+
         if(commandLine == null) {
-    
+
             synchronized (CommandLine.class) {
-    
+
                 commandLine = new CommandLine();
-    
+
             }
-    
+
         }
-    
+
         return commandLine;
-    
+
     }
 
-    public void addKeyStroke(KeyStroke keyStroke) {
+    public void addCharacter(char character) {
 
-        Character newChar = keyStroke.getCharacter();
+        if (!Character.isISOControl(character)) {
 
-        if (newChar != null && !Character.isISOControl(newChar)) {
-
-            this.keyStrokes.add(newChar);
+            this.keyStrokes.add(character);
 
         }
-        
+
     }
 
     public void removeLast() {
-        
+
         if(keyStrokes.size() >= 1) {
-            
+
             this.keyStrokes.removeLast();
-        
+
         } else {
 
             this.keyStrokes.clear();
@@ -78,15 +74,15 @@ public class CommandLine {
         if(!keyStrokes.isEmpty()) {
 
             for(int i = 0; i < keyStrokes.size(); i++) {
-                
+
                 characters[0][i] = keyStrokes.get(i);
-            
+
             }
 
         } else {
 
             characters[0][0] = ' ';
-        
+
         }
 
         renderObject.add(this.posX);

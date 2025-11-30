@@ -15,15 +15,27 @@ public class SaveGame implements Serializable {
     }
 
     public String getPlayerName() {
-    
+
         return this.player.getName();
-    
+
+    }
+
+    public Player getPlayer() {
+
+        return this.player;
+
+    }
+
+    public Dungeon getDungeon() {
+
+        return this.dungeon;
+
     }
 
     public Dungeon getHouse() {
-    
+
         return this.dungeon;
-    
+
     }
-    
+
 }

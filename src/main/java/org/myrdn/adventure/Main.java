@@ -1,14 +1,14 @@
 package org.myrdn.adventure;
 
-import java.io.IOException;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import org.myrdn.adventure.gamecontroller.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Main entry point for the Adventure game.
- * Initializes the game and starts the main game loop.
+ * Initializes LibGDX and starts the game.
  */
 public class Main {
 
@@ -16,22 +16,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.setProperty("file.encoding","UTF-8");
+        System.setProperty("file.encoding", "UTF-8");
 
         logger.info("Starting Adventure game...");
 
-        try {
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setTitle("\uD83D\uDC31\u200D\uD83D\uDC64 Textadventure");
+        config.setWindowedMode(1200, 640);
+        config.setResizable(false);
+        config.useVsync(true);
+        config.setForegroundFPS(60);
 
-            Game game = new Game();
-            game.init();
-
-        } catch(IOException e) {
-
-            logger.error("Virtuelle Konsole konnte nicht initialisiert werden", e);
-            System.out.println("Fehler beim Starten des Spiels. Siehe logs/adventure.log für Details.");
-            System.exit(1);
-
-        }
+        new Lwjgl3Application(new AdventureGame(), config);
 
     }
 

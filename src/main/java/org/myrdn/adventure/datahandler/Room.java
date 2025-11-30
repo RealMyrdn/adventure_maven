@@ -9,7 +9,6 @@ public class Room implements Serializable {
     
     private final int roomType;
     private final int roomConnections;
-    private final String roomInfo;
     private final int[][] roomLayout;
     private final ArrayList<GameObject> objects;
     
@@ -20,9 +19,8 @@ public class Room implements Serializable {
         this.roomConnections = roomConnections;
         this.roomLayout      = new int[18][32];
         this.roomType        = 0;
-        this.roomInfo        = generateRoomInfo();
         this.objects         = addObjects(availableObjects);
-    
+
     }
 
     public int getRoomConnections() {
@@ -44,9 +42,9 @@ public class Room implements Serializable {
     }
 
     public String getRoomInfo() {
-    
-        return this.roomInfo;
-    
+
+        return generateRoomInfo();
+
     }
 
     public int[][] getRoomLayout() {
@@ -92,25 +90,24 @@ public class Room implements Serializable {
     public String getRoomObjects() {
 
         StringBuilder stringbuilder = new StringBuilder();
-    
-        if(!this.objects.isEmpty()) {
-    
-            stringbuilder.append("In diesem Raum sind folgende Objekte: \n");
-    
-        } else {
-    
+
+        if (this.objects == null || this.objects.isEmpty()) {
             stringbuilder.append("In diesem Raum ist nichts von Interesse.");
-    
+            return stringbuilder.toString();
         }
-    
-        for(GameObject object : this.objects) {
-    
-            stringbuilder.append(object.getName()).append("\n");
-    
+
+        stringbuilder.append("Du siehst folgende Objekte:\n\n");
+
+        for (int i = 0; i < this.objects.size(); i++) {
+            GameObject object = this.objects.get(i);
+            stringbuilder.append(object.getName());
+            if (i < this.objects.size() - 1) {
+                stringbuilder.append("\n");
+            }
         }
-        
+
         return stringbuilder.toString();
-    
+
     }
 
     private void checkExits(int doors, StringBuilder stringbuilder) {
@@ -132,12 +129,12 @@ public class Room implements Serializable {
         if(availabeObjects != null && !availabeObjects.isEmpty()) {
         
             int chance = RANDOM.nextInt(10);
-            int countObjects = RANDOM.nextInt(2);
+            int countObjects = RANDOM.nextInt(2) + 1;  // 1 oder 2 Objekte
             ArrayList<GameObject> newObjects = new ArrayList<>();
-        
+
             if(chance >= 4) {
-        
-                for(int i = 0; i <= countObjects; i++) {
+
+                for(int i = 0; i < countObjects; i++) {
         
                     if(availabeObjects.isEmpty()) {
                         break;

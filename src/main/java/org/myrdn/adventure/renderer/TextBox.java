@@ -75,33 +75,45 @@ public class TextBox {
     }
 
     private ArrayList<String> formatText(String text) {
-        
-        int charCounter = 0;
-        StringBuilder stringBuilder = new StringBuilder();
-        ArrayList<String> textList = new ArrayList<>(Arrays.asList(text.split(WHITE_SPACE)));
+
         ArrayList<String> formatText = new ArrayList<>();
 
-        for(String word : textList) {
-            
-            if(charCounter + word.length() < this.width - 4 && !word.equals("\n")) {
-            
-                stringBuilder.append(word).append(WHITE_SPACE);
-                charCounter += word.length() + 1;
-            
-            } else {
+        // Zuerst nach Zeilenumbrüchen aufteilen
+        String[] lines = text.split("\n");
 
-                formatText.add(stringBuilder.toString());
-                stringBuilder.setLength(0);
-                charCounter = 0;
-                stringBuilder.append(word).append(WHITE_SPACE);
-                charCounter += word.length() + 1;
-            
+        for (String line : lines) {
+            if (line.isEmpty()) {
+                // Leere Zeile hinzufügen
+                formatText.add("");
+                continue;
             }
 
-        }
+            // Dann jede Zeile nach Wörtern aufteilen und umbrechen
+            String[] words = line.split(WHITE_SPACE);
+            StringBuilder stringBuilder = new StringBuilder();
+            int charCounter = 0;
 
-        formatText.add(stringBuilder.toString());
-        System.out.println(stringBuilder.toString());
+            for (String word : words) {
+                if (word.isEmpty()) {
+                    continue;
+                }
+
+                if (charCounter + word.length() < this.width - 4) {
+                    stringBuilder.append(word).append(WHITE_SPACE);
+                    charCounter += word.length() + 1;
+                } else {
+                    formatText.add(stringBuilder.toString());
+                    stringBuilder.setLength(0);
+                    charCounter = 0;
+                    stringBuilder.append(word).append(WHITE_SPACE);
+                    charCounter += word.length() + 1;
+                }
+            }
+
+            if (stringBuilder.length() > 0) {
+                formatText.add(stringBuilder.toString());
+            }
+        }
 
         return formatText;
 
