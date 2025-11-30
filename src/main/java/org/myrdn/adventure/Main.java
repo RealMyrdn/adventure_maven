@@ -3,6 +3,7 @@ package org.myrdn.adventure;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
+import org.myrdn.adventure.config.GameConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,12 +21,16 @@ public class Main {
 
         logger.info("Starting Adventure game...");
 
+        GameConfig gameConfig = new GameConfig();
+
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("\uD83D\uDC31\u200D\uD83D\uDC64 Textadventure");
-        config.setWindowedMode(1200, 640);
-        config.setResizable(false);
-        config.useVsync(true);
-        config.setForegroundFPS(60);
+        config.setWindowedMode(gameConfig.getWindowWidth(), gameConfig.getWindowHeight());
+        config.setResizable(gameConfig.isWindowResizable());
+        config.useVsync(gameConfig.isVsyncEnabled());
+        config.setForegroundFPS(gameConfig.getTargetFps());
+
+        logger.info("Window size: {}x{}", gameConfig.getWindowWidth(), gameConfig.getWindowHeight());
 
         new Lwjgl3Application(new AdventureGame(), config);
 

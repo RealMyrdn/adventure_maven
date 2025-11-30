@@ -46,6 +46,11 @@ public class GameConfig {
         properties.setProperty("player.start.y", "3");
         properties.setProperty("autosave.enabled", "true");
         properties.setProperty("autosave.interval.minutes", "5");
+        properties.setProperty("window.width", "1200");
+        properties.setProperty("window.height", "640");
+        properties.setProperty("window.resizable", "false");
+        properties.setProperty("window.vsync", "true");
+        properties.setProperty("window.fps", "60");
         properties.setProperty("game.max.command.length", "80");
     }
 
@@ -79,5 +84,25 @@ public class GameConfig {
 
     public int getMaxCommandLength() {
         return Integer.parseInt(properties.getProperty("game.max.command.length", "80"));
+    }
+
+    public int getWindowWidth() {
+        return Integer.parseInt(properties.getProperty("window.width", "1200"));
+    }
+
+    public int getWindowHeight() {
+        return Integer.parseInt(properties.getProperty("window.height", "640"));
+    }
+
+    public boolean isWindowResizable() {
+        return Boolean.parseBoolean(properties.getProperty("window.resizable", "false"));
+    }
+
+    public boolean isVsyncEnabled() {
+        return Boolean.parseBoolean(properties.getProperty("window.vsync", "true"));
+    }
+
+    public int getTargetFps() {
+        return Integer.parseInt(properties.getProperty("window.fps", "60"));
     }
 }
