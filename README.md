@@ -1,26 +1,28 @@
 # Adventure Game
 
-Ein textbasiertes Dungeon-Crawler Adventure-Spiel, entwickelt in Java mit Terminal-UI.
+Ein textbasiertes Dungeon-Crawler Adventure-Spiel, entwickelt in Java mit LibGDX.
 
 ## Architektur
 
 ```mermaid
 graph TD;
-    Main-->Game;
-    Game-->House;
-    Game-->Player;
-    Game-->Renderer;
-    Game-->Generator;
-    House-->Room
+    Main-->AdventureGame;
+    AdventureGame-->MainMenuScreen;
+    AdventureGame-->GameScreen;
+    GameScreen-->Dungeon;
+    GameScreen-->Player;
+    GameScreen-->Generator;
+    Dungeon-->Room
 ```
 
 ## Features
 
 - Prozedural generierte Dungeons
-- Textbasierte Terminal-Benutzeroberfläche (Lanterna)
+- Grafische Benutzeroberfläche mit LibGDX (vorbereitet für 3D-Erweiterung)
+- Hauptmenü mit Spielstand-Verwaltung
 - Inventar-System
 - Raum-Erkundung und Objekt-Interaktion
-- Auto-Save Funktionalität
+- Auto-Save Funktionalität (ein/ausschaltbar)
 - Konfigurierbare Spieleinstellungen
 - Umfassendes Logging-System
 
@@ -28,7 +30,7 @@ graph TD;
 
 - **Java**: 21
 - **Build Tool**: Maven 3.x
-- **UI Framework**: Lanterna 3.1.1
+- **UI Framework**: LibGDX 1.12.1
 - **Logging**: SLF4J + Logback
 - **Testing**: JUnit 5 + Mockito
 
@@ -75,8 +77,6 @@ mvn checkstyle:check
 
 ## Spiel starten
 
-**WICHTIG:** Das Spiel benötigt ein echtes Terminal/Konsole, da es Lanterna für die Terminal-UI verwendet. Es wird nicht korrekt in einer IDE-Konsole funktionieren.
-
 ### Schnellstart (Empfohlen für Entwicklung)
 
 ```bash
@@ -104,6 +104,20 @@ Kompilieren und direkt starten:
 mvn clean compile exec:java
 ```
 
+## Hauptmenü
+
+Beim Start erscheint das Hauptmenü mit folgenden Optionen:
+
+| Option | Beschreibung |
+|--------|--------------|
+| Neues Spiel | Starte ein neues Spiel mit Spielername |
+| Spiel laden | Lade einen gespeicherten Spielstand |
+| Einstellungen | Autosave ein/ausschalten |
+| Credits | Zeige Spielinformationen |
+| Beenden | Spiel beenden |
+
+**Navigation:** Pfeiltasten (↑↓) zum Auswählen, Enter zum Bestätigen, Esc zum Zurück
+
 ## Spielanleitung
 
 ### Verfügbare Befehle
@@ -111,25 +125,28 @@ mvn clean compile exec:java
 | Befehl | Beschreibung | Beispiel |
 |--------|--------------|----------|
 | `gehe [richtung]` | Bewege dich in eine Richtung | `gehe nord` |
+| `n/s/o/w` | Kurzform für Richtungen | `n` |
 | `untersuche [objekt/raum]` | Untersuche einen Gegenstand oder Raum | `untersuche truhe` |
 | `nimm [gegenstand]` | Nimm einen Gegenstand auf | `nimm schlüssel` |
 | `inventar` | Zeige dein Inventar an | `inventar` |
 | `benutze [gegenstand]` | Benutze einen Gegenstand aus dem Inventar | `benutze trank` |
+| `speichern` | Spielstand manuell speichern | `speichern` |
+| `menü` | Zurück zum Hauptmenü | `menü` |
 | `hilfe` | Zeige die Hilfe an | `hilfe` |
 | `exit` | Spiel speichern und beenden | `exit` |
 
 ### Richtungen
 
-- **nord** - Nach Norden gehen
-- **süd** - Nach Süden gehen
-- **ost** - Nach Osten gehen
-- **west** - Nach Westen gehen
+- **nord** (n) - Nach Norden gehen
+- **süd** (s) - Nach Süden gehen
+- **ost** (o) - Nach Osten gehen
+- **west** (w) - Nach Westen gehen
 
 ### Tipps
 
 - Untersuche jeden Raum gründlich mit `untersuche raum`
 - Sammle Gegenstände, die du findest
-- Das Spiel speichert automatisch alle 5 Minuten
+- Das Spiel speichert automatisch alle 5 Minuten (wenn aktiviert)
 - Verwende `exit` zum Beenden, um deinen Fortschritt zu speichern
 
 ## Konfiguration
@@ -165,8 +182,10 @@ adventure/
 │   │   │       ├── config/         # Konfigurationsklassen
 │   │   │       ├── datahandler/    # Datenmodelle und Persistenz
 │   │   │       ├── gamecontroller/ # Spiellogik und Controller
-│   │   │       └── renderer/       # UI-Rendering
+│   │   │       ├── renderer/       # UI-Komponenten
+│   │   │       └── screens/        # LibGDX Screens (Menu, Game)
 │   │   └── resources/
+│   │       ├── fonts/              # Schriftarten
 │   │       ├── game.properties     # Spielkonfiguration
 │   │       └── logback.xml         # Logging-Konfiguration
 │   └── test/
