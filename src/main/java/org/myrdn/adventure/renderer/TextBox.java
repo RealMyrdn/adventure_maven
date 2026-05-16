@@ -1,7 +1,6 @@
 package org.myrdn.adventure.renderer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TextBox {
 
