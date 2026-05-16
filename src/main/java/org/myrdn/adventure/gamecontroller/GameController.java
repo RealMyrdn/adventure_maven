@@ -380,6 +380,7 @@ public class GameController {
             textBoxList.addTextBox(35, 10, 50, 14, combatLog.toString(), "Niederlage");
             inCombat = false;
             currentEnemy = null;
+            Gdx.app.postRunnable(() -> game.setScreen(new MainMenuScreen(game)));
         } else {
             textBoxList.addTextBox(35, 10, 50, 14, combatLog.toString(), "Kampf");
         }
@@ -415,8 +416,11 @@ public class GameController {
 
             if (player.getHealth() <= 0) {
                 msg.append("\n\nDu wurdest besiegt...");
+                textBoxList.addTextBox(35, 12, 50, 12, msg.toString(), "Flucht");
                 inCombat = false;
                 currentEnemy = null;
+                Gdx.app.postRunnable(() -> game.setScreen(new MainMenuScreen(game)));
+                return;
             }
 
             textBoxList.addTextBox(35, 12, 50, 12, msg.toString(), "Flucht");

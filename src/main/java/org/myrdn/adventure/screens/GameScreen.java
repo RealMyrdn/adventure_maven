@@ -61,6 +61,7 @@ public class GameScreen extends BaseScreen {
         try {
             inputBuffer = new ArrayList<>();
             DataHandler datahandler = new DataHandler();
+
             config = new GameConfig();
             xSize = config.getDungeonWidth();
             ySize = config.getDungeonHeight();
@@ -81,7 +82,7 @@ public class GameScreen extends BaseScreen {
             textBoxList.addTextBox(40, 15, 40, 10,
                     dungeon.getRoom(Layout.startPosX, Layout.startPosY).getRoomInfo(), "Erster Eindruck");
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("Fehler beim Initialisieren des Spiels", e);
             game.setScreen(new MainMenuScreen(game));
         }
